@@ -4,9 +4,7 @@
   --max: 980px;
 }
 
-*{
-  box-sizing: border-box;
-}
+*{ box-sizing: border-box; }
 
 body{
   margin: 0;
@@ -15,9 +13,7 @@ body{
   line-height: 1.5;
 }
 
-a{
-  color: inherit;
-}
+a{ color: inherit; }
 
 .container{
   max-width: var(--max);
@@ -88,10 +84,15 @@ h1{
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.85);
-  padding: 12px;
   z-index: 9999;
 
   display: none;
+
+  /* セーフエリア考慮 */
+  padding-top: calc(12px + env(safe-area-inset-top));
+  padding-right: calc(12px + env(safe-area-inset-right));
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  padding-left: calc(12px + env(safe-area-inset-left));
 }
 
 .modal.is-open{
@@ -103,7 +104,8 @@ h1{
 .modalFrame{
   width: 100%;
   max-width: 980px;
-  max-height: calc(100dvh - 24px);
+
+  /* スマホでボタン分の余白を確保しやすいように */
   background: #111;
   border-radius: 16px;
   overflow: hidden;
@@ -113,20 +115,22 @@ h1{
 
 .modalImg{
   width: 100%;
-  height: 100%;
-  max-height: calc(100dvh - 24px);
+  height: auto;
+
+  /* 画面に収める */
+  max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   object-fit: contain;
   display: block;
+  background: #111;
 }
 
 .modalClose{
   position: fixed;
-  top: 12px;
-  right: 12px;
+  top: calc(12px + env(safe-area-inset-top));
+  right: calc(12px + env(safe-area-inset-right));
 
   width: 48px;
   height: 48px;
-
   border-radius: 50%;
   border: none;
 
@@ -137,30 +141,60 @@ h1{
   background: rgba(255,255,255,0.95);
 }
 
-/* ===== Prev/Next Buttons ===== */
+/* ===== Prev/Next Buttons (default: middle sides) ===== */
 .navBtn{
-  position: fixed;
+  position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 48px;
-  height: 48px;
+
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
   border: none;
+
   font-size: 34px;
-  line-height: 48px;
+  line-height: 44px;
+
   cursor: pointer;
   background: rgba(255,255,255,0.92);
+  z-index: 2;
 }
 
-.navPrev{ left: 12px; }
-.navNext{ right: 12px; }
+.navPrev{ left: 10px; }
+.navNext{ right: 10px; }
 
-.navBtn.is-disabled{
-  opacity: 0.35;
-  cursor: default;
-}
-
+.navBtn.is-disabled,
 .navBtn:disabled{
   opacity: 0.35;
   cursor: default;
+}
+
+/* ===== Mobile: move buttons to bottom (no overlap) ===== */
+@media (max-width: 520px){
+  /* 下部に操作エリアを作る（画像と被らない） */
+  .modalFrame{
+    padding-bottom: 56px; /* ← ここが“被り回避”のキモ */
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+
+  .modalImg{
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 56px);
+  }
+
+  .navBtn{
+    top: auto;
+    bottom: 8px;
+    transform: none;
+
+    width: 44px;
+    height: 44px;
+    font-size: 30px;
+    line-height: 44px;
+
+    /* 目立ちすぎないよう少し透過 */
+    background: rgba(255,255,255,0.88);
+  }
+
+  .navPrev{ left: 12px; }
+  .navNext{ right: 12px; }
 }
