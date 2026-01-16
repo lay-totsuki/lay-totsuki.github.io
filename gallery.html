@@ -4,9 +4,67 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gallery</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <h1>Gallery</h1>
-  <p>ここにイラストを並べます</p>
+  <div class="container">
+    <header>
+      <h1>Gallery</h1>
+      <a href="index.html">Home</a>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs" role="tablist" aria-label="Gallery tabs">
+      <button class="tab is-active" type="button" role="tab" aria-selected="true" aria-controls="panel-original" id="tab-original">
+        Original
+      </button>
+      <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="panel-fanart" id="tab-fanart">
+        Fanart
+      </button>
+    </div>
+
+    <!-- Panels -->
+    <section id="panel-original" class="panel is-active" role="tabpanel" aria-labelledby="tab-original">
+      <div class="grid">
+        <!-- Original: thumb -> full -->
+        <a class="card" href="images/illust/original/full/2026-01-maidgirl.jpg">
+          <img src="images/illust/original/thumb/2026-01-maidgirl.jpg" alt="">
+        </a>
+        <a class="card" href="images/illust/original/full/2026-01-maidgirl.jpg">
+          <img src="images/illust/original/thumb/2026-01-maidgirl.jpg" alt="">
+        </a>
+      </div>
+    </section>
+
+    <section id="panel-fanart" class="panel" role="tabpanel" aria-labelledby="tab-fanart" hidden>
+      <div class="grid">
+        <!-- Fanart: thumb -> full -->
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const tabs = Array.from(document.querySelectorAll('.tab'));
+    const panels = {
+      'tab-original': document.getElementById('panel-original'),
+      'tab-fanart': document.getElementById('panel-fanart'),
+    };
+
+    function activate(tabId){
+      tabs.forEach(t => {
+        const isActive = t.id === tabId;
+        t.classList.toggle('is-active', isActive);
+        t.setAttribute('aria-selected', String(isActive));
+      });
+
+      Object.entries(panels).forEach(([key, panel]) => {
+        const show = key === tabId;
+        panel.classList.toggle('is-active', show);
+        panel.hidden = !show;
+      });
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => activate(t.id)));
+  </script>
 </body>
 </html>

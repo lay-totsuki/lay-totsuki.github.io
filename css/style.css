@@ -1,0 +1,89 @@
+:root{
+  --gap: 12px;
+  --radius: 14px;
+  --max: 980px;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+.container{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 16px;
+}
+
+header{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+h1{
+  font-size: 20px;
+  margin: 0;
+}
+
+a{ color: inherit; }
+
+.grid{
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.card{
+  display: block;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: rgba(0,0,0,0.04);
+}
+
+.card img{
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 1 / 1;     /* サムネを正方形枠に */
+  object-fit: cover;       /* いい感じにトリミング */
+}
+
+/* 作品名など出したいとき用（今は未使用） */
+.caption{
+  padding: 10px 12px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.tabs{
+  display: inline-flex;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.06);
+  margin-bottom: 14px;
+}
+
+.tab{
+  border: 0;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.tab.is-active{
+  background: white;
+  box-shadow: 0 1px 10px rgba(0,0,0,0.08);
+}
+
+.panel{
+  margin-top: 6px;
+}
