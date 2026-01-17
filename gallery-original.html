@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Gallery｜Original</title>
+  <meta name="description" content="LayのGallery（Original）。">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Lay">
+  <meta property="og:title" content="Gallery｜Original">
+  <meta property="og:description" content="LayのGallery（Original）。">
+  <meta property="og:url" content="https://lay.mocomoco.xyz/gallery-original.html">
+  <meta property="og:image" content="https://lay.mocomoco.xyz/images/ogp.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gallery｜Original">
+  <meta name="twitter:description" content="LayのGallery（Original）。">
+  <meta name="twitter:image" content="https://lay.mocomoco.xyz/images/ogp.jpg">
+
+  <link rel="canonical" href="https://lay.mocomoco.xyz/gallery-original.html">
+  <link rel="icon" href="images/profile/favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Gallery</h1>
+      <a href="index.html">Home</a>
+    </header>
+
+    <div class="tabs" role="tablist" aria-label="Gallery categories">
+      <a class="tab is-active" href="gallery-original.html" aria-current="page">Original</a>
+      <a class="tab" href="gallery-fanart.html">Fanart</a>
+      <a class="tab" href="gallery-mini.html">Mini</a>
+    </div>
+
+    <section class="panel">
+      <div class="grid">
+
+        <!-- ▼追加テンプレ（Original）▼
+        <a class="card" href="images/illust/original/full/2026-01-sample.jpg" data-caption="2026-01 / タイトル">
+          <img src="images/illust/original/thumb/2026-01-sample.jpg" alt="2026-01 / タイトル">
+          <div class="cardCaption">2026-01 / タイトル</div>
+        </a>
+        ▲追加テンプレ ここまで▲ -->
+
+        <a class="card" href="images/illust/original/full/2026-01-maidgirl.jpg" data-caption="2026-01 / メイドさん">
+          <img src="images/illust/original/thumb/2026-01-maidgirl.jpg" alt="2026-01 / メイドさん">
+          <div class="cardCaption">2026-01 / メイドさん</div>
+        </a>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== Modal ===== -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <button class="modalClose" id="modalClose" type="button" aria-label="Close">×</button>
+
+    <div class="modalFrame" id="modalFrame" role="dialog" aria-modal="true" aria-label="Image preview">
+      <img class="modalImg" id="modalImg" alt="">
+      <div class="modalCaption" id="modalCaption"></div>
+
+      <button class="navBtn navPrev" id="navPrev" type="button" aria-label="Previous">‹</button>
+      <button class="navBtn navNext" id="navNext" type="button" aria-label="Next">›</button>
+    </div>
+  </div>
+
+  <script src="js/gallery.js"></script>
+</body>
+</html>

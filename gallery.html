@@ -2,237 +2,28 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Gallery｜Lay</title>
-  <meta name="description" content="LayのGallery。配信で見せたもの・まとめたいものを順次追加します。">
 
-  <!-- OGP -->
+  <!-- 即時リダイレクト -->
+  <meta http-equiv="refresh" content="0; url=https://lay.mocomoco.xyz/gallery-original.html">
+
+  <!-- SEO / OGP 用（リダイレクト先と一致させる） -->
+  <link rel="canonical" href="https://lay.mocomoco.xyz/gallery-original.html">
+
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Lay">
   <meta property="og:title" content="Gallery｜Lay">
-  <meta property="og:description" content="LayのGallery。配信で見せたもの・まとめたいものを順次追加します。">
-  <meta property="og:url" content="https://lay.mocomoco.xyz/gallery.html">
+  <meta property="og:description" content="Layのギャラリー（Original）。">
+  <meta property="og:url" content="https://lay.mocomoco.xyz/gallery-original.html">
   <meta property="og:image" content="https://lay.mocomoco.xyz/images/ogp.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
 
-  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Gallery｜Lay">
-  <meta name="twitter:description" content="LayのGallery。配信で見せたもの・まとめたいものを順次追加します。">
+  <meta name="twitter:description" content="Layのギャラリー（Original）。">
   <meta name="twitter:image" content="https://lay.mocomoco.xyz/images/ogp.jpg">
-
-  <link rel="canonical" href="https://lay.mocomoco.xyz/gallery.html">
-  <link rel="icon" href="images/profile/favicon.png">
-
-  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-
-  <div class="container">
-    <header>
-      <h1>Gallery</h1>
-      <a href="index.html">Home</a>
-    </header>
-
-    <!-- Tabs -->
-    <div class="tabs" role="tablist">
-      <button class="tab is-active" id="tab-original" type="button">Original</button>
-      <button class="tab" id="tab-fanart" type="button">Fanart</button>
-    </div>
-
-    <!-- Original -->
-    <section id="panel-original" class="panel">
-      <div class="grid">
-        <!-- ZIP内で実在した1枚のみ（404対策） -->
-        <a class="card" href="images/illust/original/full/2026-01-maidgirl.jpg" data-caption="2026-01 / メイドさん">
-          <img src="images/illust/original/thumb/2026-01-maidgirl.jpg" alt="2026-01 / メイドさん">
-          <div class="cardCaption">2026-01 / メイドさん</div>
-        </a>
-      </div>
-    </section>
-
-    <!-- Fanart -->
-    <section id="panel-fanart" class="panel" hidden>
-      <p>準備中</p>
-    </section>
-  </div>
-
-  <!-- ===== Modal ===== -->
-  <div class="modal" id="modal" aria-hidden="true">
-    <button class="modalClose" id="modalClose" type="button" aria-label="Close">×</button>
-
-    <div class="modalFrame" id="modalFrame" role="dialog" aria-modal="true" aria-label="Image preview">
-      <img class="modalImg" id="modalImg" alt="">
-
-      <!-- キャプション（モーダル内） -->
-      <div class="modalCaption" id="modalCaption"></div>
-
-      <button class="navBtn navPrev" id="navPrev" type="button" aria-label="Previous">‹</button>
-      <button class="navBtn navNext" id="navNext" type="button" aria-label="Next">›</button>
-    </div>
-  </div>
-
-  <script>
-    // ===== Tabs =====
-    const tabOriginal = document.getElementById('tab-original');
-    const tabFanart = document.getElementById('tab-fanart');
-    const panelOriginal = document.getElementById('panel-original');
-    const panelFanart = document.getElementById('panel-fanart');
-
-    tabOriginal.addEventListener('click', () => {
-      tabOriginal.classList.add('is-active');
-      tabFanart.classList.remove('is-active');
-      panelOriginal.hidden = false;
-      panelFanart.hidden = true;
-    });
-
-    tabFanart.addEventListener('click', () => {
-      tabFanart.classList.add('is-active');
-      tabOriginal.classList.remove('is-active');
-      panelFanart.hidden = false;
-      panelOriginal.hidden = true;
-    });
-
-    // ===== Modal + Gallery Nav =====
-    const modal = document.getElementById('modal');
-    const modalFrame = document.getElementById('modalFrame');
-    const modalImg = document.getElementById('modalImg');
-    const modalCaption = document.getElementById('modalCaption');
-    const modalClose = document.getElementById('modalClose');
-    const navPrev = document.getElementById('navPrev');
-    const navNext = document.getElementById('navNext');
-
-    // 現在開いているパネル内の {href, caption} リスト
-    let currentList = [];
-    let currentIndex = -1;
-
-    function getActivePanel(){
-      return panelFanart.hidden ? panelOriginal : panelFanart;
-    }
-
-    function buildCurrentList(){
-      const panel = getActivePanel();
-      currentList = Array.from(panel.querySelectorAll('a.card')).map(a => ({
-        href: a.getAttribute('href'),
-        caption: a.getAttribute('data-caption') || ''
-      }));
-    }
-
-    function updateNavButtons(){
-      const hasMany = currentList.length > 1;
-      navPrev.disabled = !hasMany;
-      navNext.disabled = !hasMany;
-      navPrev.classList.toggle('is-disabled', !hasMany);
-      navNext.classList.toggle('is-disabled', !hasMany);
-    }
-
-    function openModalByIndex(index){
-      if(!currentList.length) return;
-
-      currentIndex = (index + currentList.length) % currentList.length;
-
-      const item = currentList[currentIndex];
-      modalImg.src = item.href;
-      modalImg.alt = item.caption || '';
-      modalCaption.textContent = item.caption || '';
-
-      modal.classList.add('is-open');
-      modal.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-
-      updateNavButtons();
-    }
-
-    function closeModal(){
-      modal.classList.remove('is-open');
-      modal.setAttribute('aria-hidden', 'true');
-      modalImg.src = '';
-      modalImg.alt = '';
-      modalCaption.textContent = '';
-      document.body.style.overflow = '';
-      currentIndex = -1;
-    }
-
-    function next(){
-      if(currentList.length <= 1) return;
-      openModalByIndex(currentIndex + 1);
-    }
-
-    function prev(){
-      if(currentList.length <= 1) return;
-      openModalByIndex(currentIndex - 1);
-    }
-
-    // サムネクリックで開く（イベント委譲）
-    document.addEventListener('click', (e) => {
-      const card = e.target.closest('a.card');
-      if(!card) return;
-      e.preventDefault();
-
-      buildCurrentList();
-      const href = card.getAttribute('href');
-      const idx = currentList.findIndex(x => x.href === href);
-      openModalByIndex(idx >= 0 ? idx : 0);
-    });
-
-    // ×で閉じる
-    modalClose.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeModal();
-    });
-
-    // 背景タップで閉じる
-    modal.addEventListener('click', () => closeModal());
-
-    // 枠内クリックは閉じない
-    modalFrame.addEventListener('click', (e) => e.stopPropagation());
-
-    // 前後ボタン
-    navPrev.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
-    navNext.addEventListener('click', (e) => { e.stopPropagation(); next(); });
-
-    // PC: キーボード操作
-    window.addEventListener('keydown', (e) => {
-      if(!modal.classList.contains('is-open')) return;
-      if(e.key === 'Escape') closeModal();
-      if(e.key === 'ArrowLeft') prev();
-      if(e.key === 'ArrowRight') next();
-    });
-
-    // ===== Swipe (Mobile) =====
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchActive = false;
-
-    function isMostlyHorizontalSwipe(dx, dy){
-      return Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2;
-    }
-
-    modalFrame.addEventListener('touchstart', (e) => {
-      if(!modal.classList.contains('is-open')) return;
-      if(e.touches.length !== 1) return;
-
-      touchActive = true;
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-    }, { passive: true });
-
-    modalFrame.addEventListener('touchend', (e) => {
-      if(!touchActive) return;
-      touchActive = false;
-
-      const t = e.changedTouches[0];
-      const dx = t.clientX - touchStartX;
-      const dy = t.clientY - touchStartY;
-
-      if(!isMostlyHorizontalSwipe(dx, dy)) return;
-
-      if(dx < 0) next();
-      else prev();
-    }, { passive: true });
-  </script>
-
+  <p>Redirecting to Gallery...</p>
 </body>
 </html>
