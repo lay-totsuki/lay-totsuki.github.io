@@ -236,3 +236,21 @@
   setupInfinite();
   updateModalNavButtons();
 })();
+
+// =========================
+// Right click save prevention (light protection)
+// =========================
+
+document.addEventListener('contextmenu', (e) => {
+  const img = e.target.closest('img');
+  if (img) {
+    e.preventDefault();
+  }
+});
+
+document.addEventListener('dragstart', (e) => {
+  const img = e.target.closest('img');
+  if (img) {
+    e.preventDefault();
+  }
+});
