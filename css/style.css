@@ -612,3 +612,92 @@ a.card.highlighted::after {
     border-radius: 12px;
   }
 }
+
+
+/* =========================
+   Gallery CTA (make it pop)
+   ※ style.css の末尾に追記するだけでOK
+========================= */
+
+.galleryLink{
+  margin-top: 26px;
+}
+
+.galleryButton{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 15px 30px;
+  border-radius: 999px;
+
+  /* 目立つ：月光グラデ */
+  background: linear-gradient(90deg, rgba(255,255,255,0.98) 0%, rgba(214,228,255,0.92) 55%, rgba(255,255,255,0.98) 100%);
+  color: var(--accentText);
+
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow:
+    0 22px 60px rgba(0,0,0,0.55),
+    0 0 0 2px rgba(255,255,255,0.08),
+    0 0 24px rgba(190,210,255,0.22);
+
+  transform: translateZ(0);
+  transition: transform .16s ease, filter .16s ease, box-shadow .16s ease;
+}
+
+/* うっすら光の輪 */
+.galleryButton::before{
+  content:"";
+  position:absolute;
+  inset:-6px;
+  border-radius: 999px;
+  background: radial-gradient(closest-side, rgba(210,225,255,0.30), transparent 70%);
+  opacity: 0.9;
+  filter: blur(10px);
+  z-index: -1;
+}
+
+/* hoverでちょい浮く */
+.galleryButton:hover{
+  transform: translateY(-2px);
+  filter: brightness(0.99);
+  box-shadow:
+    0 26px 70px rgba(0,0,0,0.62),
+    0 0 0 2px rgba(255,255,255,0.10),
+    0 0 34px rgba(190,210,255,0.28);
+}
+
+/* 押した感 */
+.galleryButton:active{
+  transform: translateY(-1px) scale(0.99);
+}
+
+/* “呼吸する”控えめパルス（動き苦手な人は自動で止まる） */
+@keyframes galleryPulse{
+  0%   { box-shadow: 0 22px 60px rgba(0,0,0,0.55), 0 0 0 2px rgba(255,255,255,0.08), 0 0 22px rgba(190,210,255,0.20); }
+  50%  { box-shadow: 0 24px 64px rgba(0,0,0,0.58), 0 0 0 2px rgba(255,255,255,0.10), 0 0 34px rgba(190,210,255,0.30); }
+  100% { box-shadow: 0 22px 60px rgba(0,0,0,0.55), 0 0 0 2px rgba(255,255,255,0.08), 0 0 22px rgba(190,210,255,0.20); }
+}
+
+.galleryButton{
+  animation: galleryPulse 2.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .galleryButton{ animation: none !important; }
+}
+
+/* スマホは幅広で押しやすく */
+@media (max-width: 520px){
+  .galleryButton{
+    width: min(520px, 100%);
+    padding: 16px 18px;
+  }
+}
