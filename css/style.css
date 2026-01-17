@@ -223,3 +223,82 @@ h1{
   .navPrev{ left: 12px; }
   .navNext{ right: 12px; }
 }
+
+/* ===== Profile ===== */
+.profile{
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.name{
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.intro{
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 10px;
+}
+
+.bio{
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.tags{
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* ===== Credit ===== */
+.credit{
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+/* ===== Link Cards ===== */
+.links{
+  margin-bottom: 28px;
+}
+
+.links h2{
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.linkCard{
+  display: block;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #ffffff;
+  text-decoration: none;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.linkTitle{
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.linkDesc{
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+/* ===== Gallery Button ===== */
+.galleryLink{
+  text-align: center;
+  margin: 36px 0 20px;
+}
+
+.galleryButton{
+  display: inline-block;
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+}
