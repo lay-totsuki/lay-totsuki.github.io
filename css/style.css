@@ -1,7 +1,7 @@
 :root{
   --gap: 12px;
   --radius: 14px;
-  --max: 1080px;
+  --max: 820px;
 
   /* Moonlight theme */
   --bg-night-1: #0f1623;
@@ -33,6 +33,7 @@ body{
   line-height: 1.6;
   color: var(--text);
 
+  /* ===== Moonlight background ===== */
   background:
     radial-gradient(700px 520px at 82% 12%, var(--moon-glow-1) 0%, transparent 55%),
     radial-gradient(900px 650px at 18% 28%, var(--moon-glow-2) 0%, transparent 60%),
@@ -45,69 +46,61 @@ a{ color: inherit; }
 .container{
   max-width: var(--max);
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 22px 16px 44px;
 }
 
 /* =========================
-   HOME
+   HOME (index)
 ========================= */
 
-.homeGrid{
-  display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 28px;
-  min-height: 100vh; /* 画面高さ基準 */
-}
-
-/* 左カラム：上下中央 */
-.homeLeft{
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* ← 縦中央 */
-  align-items: center;
-  padding: 22px 0;
-}
-
-/* ===== Profile ===== */
-
+/* Profile block */
 .profileCard{
-  width: 100%;
-  max-width: 340px;
-
   background: var(--card);
   border: 1px solid var(--border);
   backdrop-filter: blur(8px);
   border-radius: 18px;
   padding: 22px 20px 20px;
   box-shadow: var(--shadow-lg);
-
   text-align: center;
+  margin-bottom: 16px;
 }
 
+/* 🌙 Moon Icon */
 .profileIcon{
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 10px;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.45);
-  border: 1px solid rgba(255,255,255,0.18);
+  margin-bottom: 12px;
+
+  /* 月の縁 */
+  border: 1px solid rgba(255,255,255,0.35);
+
+  /* 月光グロー */
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,0.08),
+    0 0 18px rgba(190,210,255,0.45),
+    0 0 40px rgba(120,150,255,0.25);
+
+  /* ほんのり明るく */
+  filter: brightness(1.05) contrast(1.05);
 }
 
 .name{
   margin: 4px 0 6px;
   font-size: 22px;
+  letter-spacing: 0.4px;
 }
 
 .intro{
   font-size: 13px;
   color: var(--sub);
-  margin-bottom: 10px;
+  margin: 0 0 10px;
 }
 
 .bio{
   font-size: 13px;
-  margin-bottom: 12px;
+  margin: 0 0 12px;
 }
 
 .tags{
@@ -116,53 +109,43 @@ a{ color: inherit; }
   color: var(--sub);
 }
 
-/* ===== Creator ===== */
-
+/* Creator */
 .creditCard{
-  width: 100%;
-  max-width: 340px;
-
-  margin-top: 16px;
   background: var(--card);
   border: 1px solid var(--border);
   backdrop-filter: blur(8px);
   border-radius: 16px;
   padding: 16px 18px;
   box-shadow: var(--shadow-md);
-
   text-align: center;
+  margin-bottom: 16px;
 }
 
-/* ===== Gallery Button ===== */
-
-.galleryLink{
-  width: 100%;
-  max-width: 340px;
-  margin-top: 18px;
-  text-align: center;
+.creditCard h2{
+  margin: 0 0 6px;
+  font-size: 15px;
 }
 
-.galleryButton{
-  display: inline-block;
-  padding: 12px 22px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--accentText);
+.creditCard p{
+  margin: 0;
   font-size: 13px;
-  text-decoration: none;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+  color: var(--sub);
 }
 
-/* ===== Links ===== */
+.creditCard a{
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.20);
+}
 
+/* Links */
 .links{
-  margin: 22px 0;
   background: var(--card);
   border: 1px solid var(--border);
   backdrop-filter: blur(8px);
   border-radius: 18px;
   padding: 20px 20px 10px;
   box-shadow: var(--shadow-lg);
+  margin-bottom: 16px;
 }
 
 .links h2{
@@ -178,12 +161,13 @@ a{ color: inherit; }
   border: 1px solid rgba(255,255,255,0.08);
   text-decoration: none;
   margin-bottom: 10px;
-  transition: transform .18s ease, background .18s ease;
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
 }
 
 .linkCard:hover{
   transform: translateY(-1px);
   background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.14);
 }
 
 .linkTitle{
@@ -196,32 +180,227 @@ a{ color: inherit; }
   color: var(--sub);
 }
 
+/* Gallery button */
+.galleryLink{
+  text-align: center;
+  margin-top: 18px;
+}
+
+.galleryButton{
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accentText);
+  font-size: 13px;
+  text-decoration: none;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+}
+
 /* =========================
-   RESPONSIVE
+   GALLERY (gallery.html)
 ========================= */
 
-@media (max-width: 820px){
+header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
 
-  .homeGrid{
-    grid-template-columns: 1fr;
-    min-height: auto;
-  }
+header h1{
+  margin: 0;
+  font-size: 20px;
+}
 
-  .homeLeft{
-    justify-content: flex-start; /* スマホは上寄せに戻す */
-    padding-top: 22px;
-  }
+/* Tabs */
+.tabs{
+  display: inline-flex;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.10);
+  padding: 6px;
+  border-radius: 999px;
+  gap: 6px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(8px);
+}
+
+.tab{
+  border: none;
+  background: transparent;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--sub);
+}
+
+.tab.is-active{
+  background: rgba(255,255,255,0.92);
+  color: var(--accentText);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+}
+
+/* Grid */
+.grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--gap);
+}
+
+.card{
+  display: block;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  text-decoration: none;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.25);
+}
+
+.card img{
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+/* Caption */
+.cardCaption{
+  padding: 10px 10px 11px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.86);
+  background: rgba(0,0,0,0.30);
+  border-top: 1px solid rgba(255,255,255,0.10);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+  position: fixed;
+  inset: 0;
+  background: rgba(5,8,16,0.86);
+  z-index: 9999;
+  display: none;
+
+  padding-top: calc(12px + env(safe-area-inset-top));
+  padding-right: calc(12px + env(safe-area-inset-right));
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  padding-left: calc(12px + env(safe-area-inset-left));
+}
+
+.modal.is-open{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalFrame{
+  width: 100%;
+  max-width: 980px;
+  background: rgba(10,14,24,0.85);
+  border: 1px solid rgba(255,255,255,0.10);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.60);
+  position: relative;
+}
+
+.modalImg{
+  width: 100%;
+  height: auto;
+  max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  object-fit: contain;
+  display: block;
+  background: rgba(0,0,0,0.20);
+}
+
+.modalCaption{
+  padding: 10px 12px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.88);
+  background: rgba(0,0,0,0.35);
+  border-top: 1px solid rgba(255,255,255,0.10);
+}
+
+.modalClose{
+  position: fixed;
+  top: calc(12px + env(safe-area-inset-top));
+  right: calc(12px + env(safe-area-inset-right));
+
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.16);
+
+  font-size: 30px;
+  font-weight: 700;
+
+  cursor: pointer;
+  background: rgba(255,255,255,0.90);
+  color: var(--accentText);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.55);
+}
+
+/* Prev / Next */
+.navBtn{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+
+  font-size: 34px;
+  line-height: 44px;
+
+  cursor: pointer;
+  background: rgba(255,255,255,0.88);
+  color: var(--accentText);
+  z-index: 2;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.50);
+}
+
+.navPrev{ left: 10px; }
+.navNext{ right: 10px; }
+
+.navBtn.is-disabled,
+.navBtn:disabled{
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* Mobile adjustments */
+@media (max-width: 520px){
 
   .profileIcon{
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
   }
 
-  .name{
-    font-size: 20px;
+  .modalFrame{
+    padding-bottom: 56px;
   }
 
-  .links{
-    margin-top: 18px;
+  .modalImg{
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 56px - 44px);
+  }
+
+  .modalCaption{
+    font-size: 12px;
+  }
+
+  .navBtn{
+    top: auto;
+    bottom: 8px;
+    transform: none;
   }
 }
