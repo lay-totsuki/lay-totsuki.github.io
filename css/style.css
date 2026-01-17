@@ -45,7 +45,7 @@ a{ color: inherit; }
 .container{
   max-width: var(--max);
   margin: 0 auto;
-  padding: 22px 16px 44px;
+  padding: 0 16px;
 }
 
 /* =========================
@@ -56,13 +56,16 @@ a{ color: inherit; }
   display: grid;
   grid-template-columns: 360px 1fr;
   gap: 28px;
+  min-height: 100vh; /* 画面高さ基準 */
 }
 
-/* 左カラムを中央寄せ */
+/* 左カラム：上下中央 */
 .homeLeft{
   display: flex;
   flex-direction: column;
+  justify-content: center; /* ← 縦中央 */
   align-items: center;
+  padding: 22px 0;
 }
 
 /* ===== Profile ===== */
@@ -130,22 +133,6 @@ a{ color: inherit; }
   text-align: center;
 }
 
-.creditCard h2{
-  margin: 0 0 6px;
-  font-size: 15px;
-}
-
-.creditCard p{
-  margin: 0;
-  font-size: 13px;
-  color: var(--sub);
-}
-
-.creditCard a{
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.20);
-}
-
 /* ===== Gallery Button ===== */
 
 .galleryLink{
@@ -169,6 +156,7 @@ a{ color: inherit; }
 /* ===== Links ===== */
 
 .links{
+  margin: 22px 0;
   background: var(--card);
   border: 1px solid var(--border);
   backdrop-filter: blur(8px);
@@ -216,10 +204,12 @@ a{ color: inherit; }
 
   .homeGrid{
     grid-template-columns: 1fr;
+    min-height: auto;
   }
 
   .homeLeft{
-    align-items: center;
+    justify-content: flex-start; /* スマホは上寄せに戻す */
+    padding-top: 22px;
   }
 
   .profileIcon{
