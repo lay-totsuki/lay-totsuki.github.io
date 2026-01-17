@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
 :root{
   /* Layout */
   --max: 920px;
@@ -97,6 +99,11 @@ a{ color: inherit; }
 /* =========================
    HOME (index.html)
 ========================= */
+
+.name, h1, h2{
+  font-family: "Fraunces", "Noto Sans JP", system-ui, -apple-system, "Segoe UI", sans-serif;
+  letter-spacing: 0.4px;
+}
 
 .profile,
 .profileCard{
