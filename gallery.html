@@ -4,6 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gallery</title>
+
+  <!-- SEO -->
+  <meta name="description" content="LayのGalleryページ。Original / Fanart をタブで切り替えて閲覧できます。">
+
+  <!-- OGP -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Gallery">
+  <meta property="og:description" content="LayのGalleryページ。Original / Fanart をタブで切り替えて閲覧できます。">
+  <meta property="og:url" content="https://lay.mocomoco.xyz/gallery.html">
+  <meta property="og:image" content="https://lay.mocomoco.xyz/images/profile/icon.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gallery">
+  <meta name="twitter:description" content="LayのGalleryページ。Original / Fanart をタブで切り替えて閲覧できます。">
+  <meta name="twitter:image" content="https://lay.mocomoco.xyz/images/profile/icon.png">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://lay.mocomoco.xyz/gallery.html">
+
+  <!-- Favicon -->
+  <link rel="icon" href="images/profile/favicon.png">
+
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -24,18 +47,31 @@
     <section id="panel-original" class="panel">
       <div class="grid">
         <!-- 使い方：data-caption に表示したい文言を入れる -->
-        <a class="card" href="images/illust/original/full/2026-01-maidgirl.jpg" data-caption="2026-01 / メイドさん">
-          <img src="images/illust/original/thumb/2026-01-maidgirl.jpg" alt="2026-01 / メイドさん">
+        <a class="card" href="images/illust/original/full/2026-01-maidgile.jpg" data-caption="2026-01 / メイドさん">
+          <img src="images/illust/original/thumb/2026-01-maidgirl.jpg" alt="2026-01 / Catgirl">
           <div class="cardCaption">2026-01 / メイドさん</div>
+        </a>
+
+        <a class="card" href="images/illust/original/full/2026-01-night-city.jpg" data-caption="2026-01 / Night City">
+          <img src="images/illust/original/thumb/2026-01-night-city.jpg" alt="2026-01 / Night City">
+          <div class="cardCaption">2026-01 / Night City</div>
         </a>
       </div>
     </section>
 
     <!-- Fanart -->
     <section id="panel-fanart" class="panel" hidden>
-      <p style="color: rgba(255,255,255,0.72); margin: 4px 0 0;">
-        Fanart は準備中です。
-      </p>
+      <div class="grid">
+        <a class="card" href="images/illust/fanart/full/2026-02-holo-marine.jpg" data-caption="2026-02 / FA: Marine">
+          <img src="images/illust/fanart/thumb/2026-02-holo-marine.jpg" alt="2026-02 / FA: Marine">
+          <div class="cardCaption">2026-02 / FA: Marine</div>
+        </a>
+
+        <a class="card" href="images/illust/fanart/full/2026-02-niji-mito.jpg" data-caption="2026-02 / FA: Mito">
+          <img src="images/illust/fanart/thumb/2026-02-niji-mito.jpg" alt="2026-02 / FA: Mito">
+          <div class="cardCaption">2026-02 / FA: Mito</div>
+        </a>
+      </div>
     </section>
   </div>
 
