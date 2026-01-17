@@ -1,42 +1,50 @@
 :root{
-  --gap: 12px;
-  --radius: 14px;
+  /* Layout */
   --max: 860px;
+  --gap: 12px;
+  --radius: 18px;
 
-  /* Moonlight theme */
-  --bg-night-1: #0f1623;
-  --bg-night-2: #121b2b;
-  --bg-night-3: #0b1020;
+  /* Warm Night theme (冷たさ軽減) */
+  --bg-1: #0B0A10;
+  --bg-2: #0E0C16;
+  --bg-3: #0C0B12;
 
-  --card: rgba(255,255,255,0.09);
+  --card: rgba(255,255,255,0.08);
   --card-soft: rgba(255,255,255,0.06);
-  --border: rgba(255,255,255,0.12);
+  --border: rgba(255,255,255,0.14);
 
-  --text: rgba(255,255,255,0.92);
-  --sub: rgba(255,255,255,0.72);
+  --text: rgba(255,255,255,0.94);
+  --sub: rgba(255,255,255,0.74);
 
   --shadow-lg: 0 22px 60px rgba(0,0,0,0.55);
   --shadow-md: 0 12px 30px rgba(0,0,0,0.40);
 
+  /* CTA */
   --accent: rgba(255,255,255,0.92);
-  --accentText: #0c1220;
+  --accentText: rgba(20,16,30,0.92);
 }
 
 *{ box-sizing: border-box; }
+html, body{ height: 100%; }
 
 body{
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   line-height: 1.6;
   color: var(--text);
-  position: relative;
-
-  /* Base night */
-  background: linear-gradient(180deg, var(--bg-night-1) 0%, var(--bg-night-2) 45%, var(--bg-night-3) 100%);
   overflow-x: hidden;
+
+  /* Base background (あったかいにじみ入り) */
+  background:
+    radial-gradient(900px 700px at 15% 15%, rgba(255, 189, 128, 0.10) 0%, transparent 60%),
+    radial-gradient(900px 700px at 85% 22%, rgba(255, 140, 200, 0.08) 0%, transparent 62%),
+    radial-gradient(1100px 900px at 50% 110%, rgba(255, 232, 200, 0.10) 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+
+  letter-spacing: 0.15px;
 }
 
-/* ===== Moving moonlight overlay (LP vibe) ===== */
+/* ===== Soft moving glow overlay ===== */
 body::before{
   content: "";
   position: fixed;
@@ -45,15 +53,14 @@ body::before{
   pointer-events: none;
 
   background:
-    radial-gradient(720px 520px at 78% 10%, rgba(210,225,255,0.22) 0%, transparent 56%),
-    radial-gradient(980px 740px at 22% 26%, rgba(170,200,255,0.13) 0%, transparent 62%),
-    radial-gradient(1200px 900px at 50% -20%, rgba(255,255,255,0.06) 0%, transparent 55%);
+    radial-gradient(720px 520px at 78% 10%, rgba(255,235,215,0.14) 0%, transparent 56%),
+    radial-gradient(980px 740px at 22% 26%, rgba(255,189,128,0.10) 0%, transparent 62%),
+    radial-gradient(1200px 900px at 50% -20%, rgba(255,255,255,0.05) 0%, transparent 55%);
 
   background-size: 120% 120%, 130% 130%, 140% 140%;
   background-position: 50% 50%, 50% 50%, 50% 50%;
-  filter: blur(0.2px);
-  animation: moon-drift 26s ease-in-out infinite alternate;
-  opacity: 1;
+  animation: glow-drift 26s ease-in-out infinite alternate;
+  opacity: 0.95;
 }
 
 body::after{
@@ -64,40 +71,27 @@ body::after{
   pointer-events: none;
 
   background:
-    radial-gradient(980px 760px at 66% 14%, rgba(200,220,255,0.10) 0%, transparent 62%),
-    radial-gradient(1150px 920px at 30% 36%, rgba(140,175,255,0.08) 0%, transparent 64%);
+    radial-gradient(980px 760px at 66% 14%, rgba(255,140,200,0.06) 0%, transparent 62%),
+    radial-gradient(1150px 920px at 30% 36%, rgba(255,232,200,0.06) 0%, transparent 64%);
+
   background-size: 135% 135%, 150% 150%;
   background-position: 52% 48%, 48% 52%;
-
-  animation: moon-drift-2 40s ease-in-out infinite alternate;
-  opacity: 0.85;
+  animation: glow-drift-2 40s ease-in-out infinite alternate;
+  opacity: 0.80;
 }
 
-@keyframes moon-drift{
-  0%{
-    background-position: 50% 50%, 50% 50%, 50% 50%;
-    transform: translate3d(0,0,0);
-  }
-  100%{
-    background-position: 54% 46%, 46% 54%, 52% 48%;
-    transform: translate3d(0,-8px,0);
-  }
+@keyframes glow-drift{
+  0%{ background-position: 50% 50%, 50% 50%, 50% 50%; transform: translate3d(0,0,0); }
+  100%{ background-position: 54% 46%, 46% 54%, 52% 48%; transform: translate3d(0,-8px,0); }
 }
 
-@keyframes moon-drift-2{
-  0%{
-    background-position: 52% 48%, 48% 52%;
-    transform: translate3d(0,0,0);
-  }
-  100%{
-    background-position: 48% 52%, 54% 46%;
-    transform: translate3d(0,10px,0);
-  }
+@keyframes glow-drift-2{
+  0%{ background-position: 52% 48%, 48% 52%; transform: translate3d(0,0,0); }
+  100%{ background-position: 48% 52%, 54% 46%; transform: translate3d(0,10px,0); }
 }
 
-/* Motion-safe */
 @media (prefers-reduced-motion: reduce){
-  body::before, body::after{ animation: none !important; }
+  body::before, body::after{ animation: none; }
 }
 
 a{ color: inherit; }
@@ -106,24 +100,22 @@ a{ color: inherit; }
   max-width: var(--max);
   margin: 0 auto;
   padding: 30px 16px 56px;
-  position: relative;
-  z-index: 0;
 }
 
 /* =========================
-   HOME (index) - VTuber LP
+   HOME (index.html)
 ========================= */
 
-/* Hero profile (center) */
+/* Profile (index uses .profile) */
+.profile,
 .profileCard{
-  background: linear-gradient(180deg, rgba(255,255,255,0.11) 0%, rgba(255,255,255,0.07) 100%);
-  border: 1px solid rgba(255,255,255,0.14);
+  background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.07) 100%);
+  border: 1px solid var(--border);
   backdrop-filter: blur(10px);
-  border-radius: 22px;
+  border-radius: 24px;
   padding: 28px 22px 22px;
   box-shadow: var(--shadow-lg);
 
-  /* Center hero */
   margin: 10px auto 18px;
   max-width: 520px;
 
@@ -132,51 +124,38 @@ a{ color: inherit; }
   overflow: hidden;
 }
 
-/* subtle inner glow */
+.profile::before,
 .profileCard::before{
   content:"";
   position:absolute;
   inset:-40px -80px auto -80px;
   height: 220px;
-  background: radial-gradient(closest-side, rgba(220,235,255,0.18), transparent 70%);
+  background: radial-gradient(closest-side, rgba(255,235,215,0.16), transparent 70%);
   pointer-events:none;
 }
 
-/* 🌙 Moon Icon (bigger for hero) */
 .profileIcon{
   display: block;
   margin: 0 auto 14px;
-
   width: 76px;
   height: 76px;
   border-radius: 50%;
   object-fit: cover;
 
   border: 1px solid rgba(255,255,255,0.38);
-
   box-shadow:
     0 0 0 2px rgba(255,255,255,0.08),
-    0 0 22px rgba(190,210,255,0.48),
-    0 0 58px rgba(120,150,255,0.28);
+    0 0 22px rgba(255,189,128,0.20),
+    0 0 44px rgba(255,140,200,0.14);
 
   filter: brightness(1.06) contrast(1.05);
 }
 
-/* Name */
 .name{
   margin: 6px 0 6px;
   font-size: 28px;
   letter-spacing: 0.8px;
-}
-
-/* Divider line (moon vibe) */
-.profileCard .intro::after{
-  content:"";
-  display:block;
-  width: 120px;
-  height: 1px;
-  margin: 14px auto 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.38), transparent);
+  color: rgba(255, 245, 235, 0.96);
 }
 
 .intro{
@@ -185,25 +164,36 @@ a{ color: inherit; }
   margin: 0 0 12px;
 }
 
+.profile .intro::after,
+.profileCard .intro::after{
+  content:"";
+  display:block;
+  width: 120px;
+  height: 1px;
+  margin: 14px auto 0;
+  background: linear-gradient(90deg, transparent, rgba(255,235,215,0.35), transparent);
+}
+
 .bio{
   font-size: 13px;
-  color: rgba(255,255,255,0.88);
+  color: rgba(255,255,255,0.90);
   margin: 0 0 14px;
 }
 
-/* Tag list */
 .tags{
   font-size: 12px;
   line-height: 1.9;
   color: var(--sub);
 }
+.tags strong{ color: rgba(255,255,255,0.92); }
 
-/* Creator card */
+/* Credit (index uses .credit) */
+.credit,
 .creditCard{
   background: var(--card);
   border: 1px solid var(--border);
   backdrop-filter: blur(10px);
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 16px 18px;
   box-shadow: var(--shadow-md);
   text-align: center;
@@ -212,18 +202,22 @@ a{ color: inherit; }
   max-width: 520px;
 }
 
+.credit h2,
 .creditCard h2{
   margin: 0 0 6px;
   font-size: 14px;
   letter-spacing: 0.3px;
+  color: rgba(255, 245, 235, 0.96);
 }
 
+.credit p,
 .creditCard p{
   margin: 0;
   font-size: 13px;
   color: var(--sub);
 }
 
+.credit a,
 .creditCard a{
   text-decoration: none;
   border-bottom: 1px solid rgba(255,255,255,0.22);
@@ -234,7 +228,7 @@ a{ color: inherit; }
   background: var(--card);
   border: 1px solid var(--border);
   backdrop-filter: blur(10px);
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 18px 18px 8px;
   box-shadow: var(--shadow-md);
 
@@ -246,7 +240,7 @@ a{ color: inherit; }
   margin: 0 0 12px;
   font-size: 15px;
   letter-spacing: 0.3px;
-  color: rgba(255,255,255,0.90);
+  color: rgba(255, 245, 235, 0.96);
 }
 
 /* Link cards */
@@ -255,15 +249,15 @@ a{ color: inherit; }
   padding: 14px 14px;
   border-radius: 14px;
   background: var(--card-soft);
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.12);
   text-decoration: none;
   margin-bottom: 10px;
   transition: transform .18s ease, background .18s ease, border-color .18s ease;
 }
 
 .linkCard:hover{
-  transform: translateY(-1px);
-  background: rgba(255,255,255,0.085);
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.09);
   border-color: rgba(255,255,255,0.16);
 }
 
@@ -281,22 +275,42 @@ a{ color: inherit; }
 /* Gallery CTA */
 .galleryLink{
   text-align: center;
-  margin-top: 20px;
+  margin-top: 22px;
 }
 
 .galleryButton{
   display: inline-block;
-  padding: 13px 26px;
+  padding: 14px 28px;
   border-radius: 999px;
-  background: var(--accent);
+
+  /* warm CTA */
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.98),
+    rgba(255, 235, 215, 0.92),
+    rgba(255,255,255,0.98)
+  );
   color: var(--accentText);
-  font-size: 13px;
+
+  font-size: 14px;
+  font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 22px 60px rgba(0,0,0,0.55);
+
+  border: 1px solid rgba(255,255,255,0.20);
+  box-shadow:
+    0 22px 60px rgba(0,0,0,0.52),
+    0 0 24px rgba(255, 189, 128, 0.18),
+    0 0 18px rgba(255, 140, 200, 0.12);
+
+  transition: transform .16s ease, filter .16s ease, box-shadow .16s ease;
 }
 
 .galleryButton:hover{
-  filter: brightness(0.98);
+  transform: translateY(-2px);
+  filter: brightness(0.99);
+}
+
+.galleryButton:active{
+  transform: translateY(-1px) scale(0.99);
 }
 
 /* =========================
@@ -313,6 +327,13 @@ header{
 header h1{
   margin: 0;
   font-size: 20px;
+  color: rgba(255, 245, 235, 0.96);
+}
+
+header a{
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.86);
 }
 
 /* Tabs */
@@ -338,8 +359,11 @@ header h1{
 }
 
 .tab.is-active{
-  background: rgba(255,255,255,0.92);
-  color: var(--accentText);
+  background: linear-gradient(90deg,
+    rgba(255, 189, 128, 0.95),
+    rgba(255, 140, 200, 0.78)
+  );
+  color: rgba(20,16,30,0.92);
   box-shadow: 0 10px 24px rgba(0,0,0,0.45);
 }
 
@@ -354,10 +378,18 @@ header h1{
   display: block;
   border-radius: var(--radius);
   overflow: hidden;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
   text-decoration: none;
-  box-shadow: 0 12px 26px rgba(0,0,0,0.35);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.38);
+  position: relative;
+  transition: transform .16s ease, background .16s ease, border-color .16s ease;
+}
+
+.card:hover{
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.075);
+  border-color: rgba(255,255,255,0.16);
 }
 
 .card img{
@@ -365,15 +397,16 @@ header h1{
   aspect-ratio: 1 / 1;
   object-fit: cover;
   display: block;
+  filter: saturate(1.02) contrast(1.02);
 }
 
 /* Caption */
 .cardCaption{
   padding: 10px 10px 11px;
   font-size: 12px;
-  color: rgba(255,255,255,0.88);
+  color: rgba(255,255,255,0.90);
   background: rgba(0,0,0,0.30);
-  border-top: 1px solid rgba(255,255,255,0.10);
+  border-top: 1px solid rgba(255,255,255,0.12);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -443,8 +476,8 @@ header h1{
 
   font-size: 30px;
   font-weight: 700;
-
   cursor: pointer;
+
   background: rgba(255,255,255,0.90);
   color: var(--accentText);
   box-shadow: 0 16px 40px rgba(0,0,0,0.65);
@@ -487,6 +520,7 @@ header h1{
 @media (max-width: 520px){
   .container{ padding-top: 22px; }
 
+  .profile,
   .profileCard{
     padding: 24px 18px 18px;
     border-radius: 20px;
@@ -528,259 +562,4 @@ header h1{
 
   .navPrev{ left: 12px; }
   .navNext{ right: 12px; }
-}
-
-/* =========================
-   Infinite Scroll-like
-========================= */
-
-.infiniteTrigger {
-  height: 1px;
-  width: 100%;
-}
-
-.loadMore {
-  margin: 24px auto 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.loadMore:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.loadMore:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* =========================
-   Gallery Active Highlight
-========================= */
-
-/* 一瞬光る用クラス（JSで focus される要素に効く） */
-a.card:focus {
-  outline: none;
-}
-
-/* 疑似ハイライト */
-a.card:focus-visible,
-a.card.highlighted {
-  position: relative;
-}
-
-/* 光る枠 */
-a.card:focus-visible::after,
-a.card.highlighted::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border-radius: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.2),
-    0 0 16px rgba(255, 255, 255, 0.4);
-  pointer-events: none;
-  animation: highlightFade 1.2s ease-out forwards;
-}
-
-/* フェードアウト */
-@keyframes highlightFade {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-/* モバイル用微調整 */
-@media (max-width: 600px) {
-  a.card:focus-visible::after,
-  a.card.highlighted::after {
-    inset: -3px;
-    border-radius: 12px;
-  }
-}
-
-
-/* =========================
-   Gallery CTA (make it pop)
-   ※ style.css の末尾に追記するだけでOK
-========================= */
-
-.galleryLink{
-  margin-top: 26px;
-}
-
-.galleryButton{
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-
-  padding: 15px 30px;
-  border-radius: 999px;
-
-  /* 目立つ：月光グラデ */
-  background: linear-gradient(90deg, rgba(255,255,255,0.98) 0%, rgba(214,228,255,0.92) 55%, rgba(255,255,255,0.98) 100%);
-  color: var(--accentText);
-
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  text-decoration: none;
-
-  border: 1px solid rgba(255,255,255,0.22);
-  box-shadow:
-    0 22px 60px rgba(0,0,0,0.55),
-    0 0 0 2px rgba(255,255,255,0.08),
-    0 0 24px rgba(190,210,255,0.22);
-
-  transform: translateZ(0);
-  transition: transform .16s ease, filter .16s ease, box-shadow .16s ease;
-}
-
-/* うっすら光の輪 */
-.galleryButton::before{
-  content:"";
-  position:absolute;
-  inset:-6px;
-  border-radius: 999px;
-  background: radial-gradient(closest-side, rgba(210,225,255,0.30), transparent 70%);
-  opacity: 0.9;
-  filter: blur(10px);
-  z-index: -1;
-}
-
-/* hoverでちょい浮く */
-.galleryButton:hover{
-  transform: translateY(-2px);
-  filter: brightness(0.99);
-  box-shadow:
-    0 26px 70px rgba(0,0,0,0.62),
-    0 0 0 2px rgba(255,255,255,0.10),
-    0 0 34px rgba(190,210,255,0.28);
-}
-
-/* 押した感 */
-.galleryButton:active{
-  transform: translateY(-1px) scale(0.99);
-}
-
-/* “呼吸する”控えめパルス（動き苦手な人は自動で止まる） */
-@keyframes galleryPulse{
-  0%   { box-shadow: 0 22px 60px rgba(0,0,0,0.55), 0 0 0 2px rgba(255,255,255,0.08), 0 0 22px rgba(190,210,255,0.20); }
-  50%  { box-shadow: 0 24px 64px rgba(0,0,0,0.58), 0 0 0 2px rgba(255,255,255,0.10), 0 0 34px rgba(190,210,255,0.30); }
-  100% { box-shadow: 0 22px 60px rgba(0,0,0,0.55), 0 0 0 2px rgba(255,255,255,0.08), 0 0 22px rgba(190,210,255,0.20); }
-}
-
-.galleryButton{
-  animation: galleryPulse 2.8s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce){
-  .galleryButton{ animation: none !important; }
-}
-
-/* スマホは幅広で押しやすく */
-@media (max-width: 520px){
-  .galleryButton{
-    width: min(520px, 100%);
-    padding: 16px 18px;
-  }
-}
-
-/* =========================
-   Warm & Friendly Patch
-   （シンプル/冷たい印象の改善）
-   style.css の末尾に追記
-========================= */
-
-/* 全体の空気：少し暖色を混ぜた背景 */
-body{
-  background:
-    radial-gradient(900px 700px at 15% 15%, rgba(255, 189, 128, 0.10) 0%, transparent 60%),
-    radial-gradient(900px 700px at 85% 22%, rgba(255, 140, 200, 0.08) 0%, transparent 62%),
-    radial-gradient(1100px 900px at 50% 110%, rgba(255, 232, 200, 0.10) 0%, transparent 55%),
-    linear-gradient(180deg, #0B0A10 0%, #0E0C16 45%, #0C0B12 100%);
-}
-
-/* カード類を「やわらかい透明感」に */
-.profile, .profileCard,
-.links, .credit, .creditCard,
-.card{
-  border-color: rgba(255,255,255,0.14) !important;
-  background: rgba(255,255,255,0.07) !important;
-  box-shadow: 0 18px 46px rgba(0,0,0,0.46) !important;
-}
-
-/* 角を少し大きくしてやわらかく */
-.profile, .profileCard{ border-radius: 24px !important; }
-.links, .credit, .creditCard{ border-radius: 20px !important; }
-.card{ border-radius: 18px !important; }
-.cardCaption{ border-top-color: rgba(255,255,255,0.12) !important; }
-
-/* 文字：ほんの少し丸く・優しく見えるように */
-body{
-  letter-spacing: 0.15px;
-}
-
-/* リンクカードに“人感”の微差（均一さを崩す） */
-.linkCard{
-  background: rgba(255,255,255,0.06) !important;
-  border-color: rgba(255,255,255,0.12) !important;
-}
-.linkCard:hover{
-  background: rgba(255,255,255,0.09) !important;
-  transform: translateY(-2px) !important;
-}
-
-/* タブを冷たくしない：グラデを少し暖色寄せ */
-.tab.is-active{
-  background: linear-gradient(90deg,
-    rgba(255, 189, 128, 0.95),
-    rgba(255, 140, 200, 0.78)
-  ) !important;
-  color: rgba(20,16,30,0.92) !important;
-}
-
-/* ギャラリーボタン：白×あったかい縁取り */
-.galleryButton{
-  background: linear-gradient(90deg,
-    rgba(255,255,255,0.98),
-    rgba(255, 235, 215, 0.92),
-    rgba(255,255,255,0.98)
-  ) !important;
-  color: rgba(20,16,30,0.92) !important;
-  box-shadow:
-    0 22px 60px rgba(0,0,0,0.52),
-    0 0 24px rgba(255, 189, 128, 0.18),
-    0 0 18px rgba(255, 140, 200, 0.12) !important;
-}
-
-/* “キラッ”を控えめに（冷たく見える白光を減らす） */
-.galleryButton::before{
-  background: radial-gradient(closest-side, rgba(255, 235, 215, 0.28), transparent 70%) !important;
-}
-
-/* 画像周りも優しく：サムネのコントラストを少し下げる */
-.card img{
-  filter: saturate(1.02) contrast(1.02);
-}
-
-/* 見出しの温度：わずかに暖色 */
-h1, h2, .name{
-  color: rgba(255, 245, 235, 0.96);
 }
