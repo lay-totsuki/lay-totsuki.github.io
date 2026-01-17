@@ -230,6 +230,18 @@ h1{
   margin-bottom: 28px;
 }
 
+/* 丸アイコン */
+.profileIcon{
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 10px;
+
+  /* ほんのり浮かせる */
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+
 .name{
   font-size: 26px;
   margin-bottom: 8px;
@@ -250,6 +262,15 @@ h1{
   font-size: 13px;
   line-height: 1.7;
 }
+
+/* スマホ微調整 */
+@media (max-width: 520px){
+  .profileIcon{
+    width: 96px;
+    height: 96px;
+  }
+}
+
 
 /* ===== Credit ===== */
 .credit{
