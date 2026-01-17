@@ -1,25 +1,22 @@
 :root{
   --gap: 12px;
   --radius: 14px;
-  --max: 820px;
+  --max: 860px;
 
   /* Moonlight theme */
   --bg-night-1: #0f1623;
   --bg-night-2: #121b2b;
   --bg-night-3: #0b1020;
-  --moon-glow-1: rgba(210, 225, 255, 0.20);
-  --moon-glow-2: rgba(170, 200, 255, 0.12);
-  --moon-glow-3: rgba(255, 255, 255, 0.06);
 
-  --card: rgba(255,255,255,0.08);
+  --card: rgba(255,255,255,0.09);
   --card-soft: rgba(255,255,255,0.06);
-  --border: rgba(255,255,255,0.10);
+  --border: rgba(255,255,255,0.12);
 
   --text: rgba(255,255,255,0.92);
-  --sub: rgba(255,255,255,0.70);
+  --sub: rgba(255,255,255,0.72);
 
-  --shadow-lg: 0 18px 40px rgba(0,0,0,0.45);
-  --shadow-md: 0 10px 26px rgba(0,0,0,0.35);
+  --shadow-lg: 0 22px 60px rgba(0,0,0,0.55);
+  --shadow-md: 0 12px 30px rgba(0,0,0,0.40);
 
   --accent: rgba(255,255,255,0.92);
   --accentText: #0c1220;
@@ -32,13 +29,75 @@ body{
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   line-height: 1.6;
   color: var(--text);
+  position: relative;
 
-  /* ===== Moonlight background ===== */
+  /* Base night */
+  background: linear-gradient(180deg, var(--bg-night-1) 0%, var(--bg-night-2) 45%, var(--bg-night-3) 100%);
+  overflow-x: hidden;
+}
+
+/* ===== Moving moonlight overlay (LP vibe) ===== */
+body::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
   background:
-    radial-gradient(700px 520px at 82% 12%, var(--moon-glow-1) 0%, transparent 55%),
-    radial-gradient(900px 650px at 18% 28%, var(--moon-glow-2) 0%, transparent 60%),
-    radial-gradient(1200px 900px at 50% -20%, var(--moon-glow-3) 0%, transparent 55%),
-    linear-gradient(180deg, var(--bg-night-1) 0%, var(--bg-night-2) 45%, var(--bg-night-3) 100%);
+    radial-gradient(720px 520px at 78% 10%, rgba(210,225,255,0.22) 0%, transparent 56%),
+    radial-gradient(980px 740px at 22% 26%, rgba(170,200,255,0.13) 0%, transparent 62%),
+    radial-gradient(1200px 900px at 50% -20%, rgba(255,255,255,0.06) 0%, transparent 55%);
+
+  background-size: 120% 120%, 130% 130%, 140% 140%;
+  background-position: 50% 50%, 50% 50%, 50% 50%;
+  filter: blur(0.2px);
+  animation: moon-drift 26s ease-in-out infinite alternate;
+  opacity: 1;
+}
+
+body::after{
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background:
+    radial-gradient(980px 760px at 66% 14%, rgba(200,220,255,0.10) 0%, transparent 62%),
+    radial-gradient(1150px 920px at 30% 36%, rgba(140,175,255,0.08) 0%, transparent 64%);
+  background-size: 135% 135%, 150% 150%;
+  background-position: 52% 48%, 48% 52%;
+
+  animation: moon-drift-2 40s ease-in-out infinite alternate;
+  opacity: 0.85;
+}
+
+@keyframes moon-drift{
+  0%{
+    background-position: 50% 50%, 50% 50%, 50% 50%;
+    transform: translate3d(0,0,0);
+  }
+  100%{
+    background-position: 54% 46%, 46% 54%, 52% 48%;
+    transform: translate3d(0,-8px,0);
+  }
+}
+
+@keyframes moon-drift-2{
+  0%{
+    background-position: 52% 48%, 48% 52%;
+    transform: translate3d(0,0,0);
+  }
+  100%{
+    background-position: 48% 52%, 54% 46%;
+    transform: translate3d(0,10px,0);
+  }
+}
+
+/* Motion-safe */
+@media (prefers-reduced-motion: reduce){
+  body::before, body::after{ animation: none !important; }
 }
 
 a{ color: inherit; }
@@ -46,84 +105,117 @@ a{ color: inherit; }
 .container{
   max-width: var(--max);
   margin: 0 auto;
-  padding: 22px 16px 44px;
+  padding: 30px 16px 56px;
+  position: relative;
+  z-index: 0;
 }
 
 /* =========================
-   HOME (index)
+   HOME (index) - VTuber LP
 ========================= */
 
-/* Profile block */
+/* Hero profile (center) */
 .profileCard{
-  background: var(--card);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(8px);
-  border-radius: 18px;
-  padding: 22px 20px 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.11) 0%, rgba(255,255,255,0.07) 100%);
+  border: 1px solid rgba(255,255,255,0.14);
+  backdrop-filter: blur(10px);
+  border-radius: 22px;
+  padding: 28px 22px 22px;
   box-shadow: var(--shadow-lg);
+
+  /* Center hero */
+  margin: 10px auto 18px;
+  max-width: 520px;
+
   text-align: center;
-  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* 🌙 Moon Icon */
+/* subtle inner glow */
+.profileCard::before{
+  content:"";
+  position:absolute;
+  inset:-40px -80px auto -80px;
+  height: 220px;
+  background: radial-gradient(closest-side, rgba(220,235,255,0.18), transparent 70%);
+  pointer-events:none;
+}
+
+/* 🌙 Moon Icon (bigger for hero) */
 .profileIcon{
-  width: 64px;
-  height: 64px;
+  display: block;
+  margin: 0 auto 14px;
+
+  width: 76px;
+  height: 76px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 12px;
 
-  /* 月の縁 */
-  border: 1px solid rgba(255,255,255,0.35);
+  border: 1px solid rgba(255,255,255,0.38);
 
-  /* 月光グロー */
   box-shadow:
     0 0 0 2px rgba(255,255,255,0.08),
-    0 0 18px rgba(190,210,255,0.45),
-    0 0 40px rgba(120,150,255,0.25);
+    0 0 22px rgba(190,210,255,0.48),
+    0 0 58px rgba(120,150,255,0.28);
 
-  /* ほんのり明るく */
-  filter: brightness(1.05) contrast(1.05);
+  filter: brightness(1.06) contrast(1.05);
 }
 
+/* Name */
 .name{
-  margin: 4px 0 6px;
-  font-size: 22px;
-  letter-spacing: 0.4px;
+  margin: 6px 0 6px;
+  font-size: 28px;
+  letter-spacing: 0.8px;
+}
+
+/* Divider line (moon vibe) */
+.profileCard .intro::after{
+  content:"";
+  display:block;
+  width: 120px;
+  height: 1px;
+  margin: 14px auto 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.38), transparent);
 }
 
 .intro{
-  font-size: 13px;
+  font-size: 14px;
   color: var(--sub);
-  margin: 0 0 10px;
+  margin: 0 0 12px;
 }
 
 .bio{
   font-size: 13px;
-  margin: 0 0 12px;
+  color: rgba(255,255,255,0.88);
+  margin: 0 0 14px;
 }
 
+/* Tag list */
 .tags{
   font-size: 12px;
-  line-height: 1.7;
+  line-height: 1.9;
   color: var(--sub);
 }
 
-/* Creator */
+/* Creator card */
 .creditCard{
   background: var(--card);
   border: 1px solid var(--border);
-  backdrop-filter: blur(8px);
-  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
   padding: 16px 18px;
   box-shadow: var(--shadow-md);
   text-align: center;
-  margin-bottom: 16px;
+
+  margin: 0 auto 18px;
+  max-width: 520px;
 }
 
 .creditCard h2{
   margin: 0 0 6px;
-  font-size: 15px;
+  font-size: 14px;
+  letter-spacing: 0.3px;
 }
 
 .creditCard p{
@@ -134,31 +226,36 @@ a{ color: inherit; }
 
 .creditCard a{
   text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.20);
+  border-bottom: 1px solid rgba(255,255,255,0.22);
 }
 
-/* Links */
+/* Links sections */
 .links{
   background: var(--card);
   border: 1px solid var(--border);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
   border-radius: 18px;
-  padding: 20px 20px 10px;
-  box-shadow: var(--shadow-lg);
-  margin-bottom: 16px;
+  padding: 18px 18px 8px;
+  box-shadow: var(--shadow-md);
+
+  margin: 0 auto 16px;
+  max-width: 680px;
 }
 
 .links h2{
-  margin: 0 0 10px;
-  font-size: 17px;
+  margin: 0 0 12px;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  color: rgba(255,255,255,0.90);
 }
 
+/* Link cards */
 .linkCard{
   display: block;
-  padding: 14px 16px;
+  padding: 14px 14px;
   border-radius: 14px;
   background: var(--card-soft);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.10);
   text-decoration: none;
   margin-bottom: 10px;
   transition: transform .18s ease, background .18s ease, border-color .18s ease;
@@ -166,13 +263,14 @@ a{ color: inherit; }
 
 .linkCard:hover{
   transform: translateY(-1px);
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.085);
+  border-color: rgba(255,255,255,0.16);
 }
 
 .linkTitle{
-  font-weight: 600;
+  font-weight: 650;
   margin-bottom: 4px;
+  color: rgba(255,255,255,0.92);
 }
 
 .linkDesc{
@@ -180,21 +278,25 @@ a{ color: inherit; }
   color: var(--sub);
 }
 
-/* Gallery button */
+/* Gallery CTA */
 .galleryLink{
   text-align: center;
-  margin-top: 18px;
+  margin-top: 20px;
 }
 
 .galleryButton{
   display: inline-block;
-  padding: 12px 22px;
+  padding: 13px 26px;
   border-radius: 999px;
   background: var(--accent);
   color: var(--accentText);
   font-size: 13px;
   text-decoration: none;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+  box-shadow: 0 22px 60px rgba(0,0,0,0.55);
+}
+
+.galleryButton:hover{
+  filter: brightness(0.98);
 }
 
 /* =========================
@@ -222,7 +324,7 @@ header h1{
   border-radius: 999px;
   gap: 6px;
   margin-bottom: 16px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
 }
 
 .tab{
@@ -238,7 +340,7 @@ header h1{
 .tab.is-active{
   background: rgba(255,255,255,0.92);
   color: var(--accentText);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.45);
 }
 
 /* Grid */
@@ -253,9 +355,9 @@ header h1{
   border-radius: var(--radius);
   overflow: hidden;
   background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.10);
   text-decoration: none;
-  box-shadow: 0 10px 22px rgba(0,0,0,0.25);
+  box-shadow: 0 12px 26px rgba(0,0,0,0.35);
 }
 
 .card img{
@@ -269,7 +371,7 @@ header h1{
 .cardCaption{
   padding: 10px 10px 11px;
   font-size: 12px;
-  color: rgba(255,255,255,0.86);
+  color: rgba(255,255,255,0.88);
   background: rgba(0,0,0,0.30);
   border-top: 1px solid rgba(255,255,255,0.10);
   white-space: nowrap;
@@ -303,12 +405,12 @@ header h1{
 .modalFrame{
   width: 100%;
   max-width: 980px;
-  background: rgba(10,14,24,0.85);
-  border: 1px solid rgba(255,255,255,0.10);
-  backdrop-filter: blur(8px);
+  background: rgba(10,14,24,0.86);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 18px 50px rgba(0,0,0,0.60);
+  box-shadow: 0 22px 70px rgba(0,0,0,0.70);
   position: relative;
 }
 
@@ -345,7 +447,7 @@ header h1{
   cursor: pointer;
   background: rgba(255,255,255,0.90);
   color: var(--accentText);
-  box-shadow: 0 14px 30px rgba(0,0,0,0.55);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.65);
 }
 
 /* Prev / Next */
@@ -366,7 +468,7 @@ header h1{
   background: rgba(255,255,255,0.88);
   color: var(--accentText);
   z-index: 2;
-  box-shadow: 0 14px 28px rgba(0,0,0,0.50);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.65);
 }
 
 .navPrev{ left: 10px; }
@@ -378,29 +480,52 @@ header h1{
   cursor: default;
 }
 
-/* Mobile adjustments */
-@media (max-width: 520px){
+/* =========================
+   RESPONSIVE
+========================= */
 
-  .profileIcon{
-    width: 56px;
-    height: 56px;
+@media (max-width: 520px){
+  .container{ padding-top: 22px; }
+
+  .profileCard{
+    padding: 24px 18px 18px;
+    border-radius: 20px;
+    max-width: 520px;
   }
 
+  .profileIcon{
+    width: 64px;
+    height: 64px;
+  }
+
+  .name{ font-size: 24px; }
+
+  .links{ padding: 16px 16px 6px; }
+
+  /* Mobile: move modal nav buttons to bottom (no overlap) */
   .modalFrame{
     padding-bottom: 56px;
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   }
 
   .modalImg{
     max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 56px - 44px);
   }
 
-  .modalCaption{
-    font-size: 12px;
-  }
+  .modalCaption{ font-size: 12px; }
 
   .navBtn{
     top: auto;
     bottom: 8px;
     transform: none;
+
+    width: 44px;
+    height: 44px;
+    font-size: 30px;
+    line-height: 44px;
+    background: rgba(255,255,255,0.86);
   }
+
+  .navPrev{ left: 12px; }
+  .navNext{ right: 12px; }
 }
