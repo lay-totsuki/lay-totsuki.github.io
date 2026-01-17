@@ -531,63 +531,36 @@ header h1{
 }
 
 /* =========================
-   Gallery Pagination
+   Infinite Scroll-like
 ========================= */
 
-.pager {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  margin: 32px 0 16px;
-  flex-wrap: wrap;
+.infiniteTrigger {
+  height: 1px;
+  width: 100%;
 }
 
-.pager button {
-  background: rgba(255, 255, 255, 0.05);
+.loadMore {
+  margin: 24px auto 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
   color: #fff;
-  padding: 6px 12px;
-  font-size: 14px;
-  border-radius: 8px;
   cursor: pointer;
   transition: all 0.15s ease;
-  min-width: 36px;
 }
 
-/* Hover */
-.pager button:hover:not(:disabled) {
+.loadMore:hover {
   background: rgba(255, 255, 255, 0.12);
 }
 
-/* Active Page */
-.pager button[aria-current="page"] {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.4);
-  font-weight: 600;
-}
-
-/* Disabled */
-.pager button:disabled {
+.loadMore:disabled {
   opacity: 0.4;
   cursor: not-allowed;
-}
-
-/* "..." span */
-.pager span {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 14px;
-}
-
-/* Mobile tuning */
-@media (max-width: 600px) {
-  .pager {
-    gap: 4px;
-  }
-
-  .pager button {
-    padding: 5px 10px;
-    font-size: 13px;
-  }
 }
 

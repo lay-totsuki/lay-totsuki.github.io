@@ -1,8 +1,8 @@
-// gallery.js (pagination + modal)
+// gallery.js (infinite scroll-like + modal)
 // 対象: gallery-original.html / gallery-fanart.html / gallery-mini.html
 (() => {
   // ===== Settings =====
-  const PER_PAGE = 12; // 1ページあたりの表示枚数（好みで変更）
+  const BATCH = 12; // 1回で追加表示する枚数
 
   // ===== Elements =====
   const modal = document.getElementById('modal');
@@ -13,136 +13,54 @@
   const navPrev = document.getElementById('navPrev');
   const navNext = document.getElementById('navNext');
 
-  const pager = document.getElementById('pager');
+  const trigger = document.getElementById('infiniteTrigger');
+  const loadMoreBtn = document.getElementById('loadMore');
 
-  // grid内のカード一覧（全件）
+  // grid内カード全件（DOMには全部置いておく方式）
   const allCards = Array.from(document.querySelectorAll('a.card'));
+  const total = allCards.length;
 
-  // ===== Helpers =====
-  function getPageFromURL() {
-    const params = new URLSearchParams(location.search);
-    const p = parseInt(params.get('page') || '1', 10);
-    return Number.isFinite(p) && p > 0 ? p : 1;
-  }
-
-  function setPageToURL(page) {
-    const url = new URL(location.href);
-    url.searchParams.set('page', String(page));
-    // ハッシュは維持
-    history.replaceState({}, '', url.toString());
-  }
-
-  function clamp(n, min, max) {
-    return Math.max(min, Math.min(max, n));
-  }
-
-  // ===== Pagination State =====
-  const totalItems = allCards.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / PER_PAGE));
-  let currentPage = clamp(getPageFromURL(), 1, totalPages);
-
-  // 表示中ページのカードだけを使ってモーダルの前後移動をする
-  let pageCards = [];
-  let pageItems = [];
+  // ===== State =====
+  let shown = 0; // 現在表示している枚数
   let currentIndex = -1;
 
-  function rebuildPageItems() {
-    pageCards = Array.from(document.querySelectorAll('a.card')).filter(a => !a.hidden);
-    pageItems = pageCards.map(a => ({
+  function isOpen() {
+    return modal && modal.classList.contains('is-open');
+  }
+
+  function hideAllCards() {
+    allCards.forEach(card => { card.hidden = true; });
+  }
+
+  function showNextBatch() {
+    const next = Math.min(total, shown + BATCH);
+    for (let i = shown; i < next; i++) {
+      allCards[i].hidden = false;
+    }
+    shown = next;
+
+    // もう全部出たらボタン消す
+    if (loadMoreBtn) {
+      loadMoreBtn.style.display = (shown >= total) ? 'none' : 'inline-flex';
+      loadMoreBtn.disabled = shown >= total;
+    }
+  }
+
+  function getVisibleCards() {
+    // 「表示済み」のカードだけを対象にモーダル移動させる
+    return allCards.slice(0, shown);
+  }
+
+  function getVisibleItems() {
+    return getVisibleCards().map(a => ({
       href: a.getAttribute('href'),
       caption: a.getAttribute('data-caption') || ''
     }));
   }
 
-  function renderPager() {
-    if (!pager) return;
-    pager.innerHTML = '';
-
-    if (totalPages <= 1) return;
-
-    const makeBtn = (label, page, disabled = false, isCurrent = false) => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = label;
-      btn.disabled = disabled;
-      btn.setAttribute('aria-disabled', String(disabled));
-      if (isCurrent) btn.setAttribute('aria-current', 'page');
-
-      btn.addEventListener('click', () => {
-        if (disabled) return;
-        goToPage(page);
-      });
-      return btn;
-    };
-
-    // Prev
-    pager.appendChild(makeBtn('‹ Prev', currentPage - 1, currentPage === 1));
-
-    // Page numbers（多すぎると邪魔なので簡易ウィンドウ表示）
-    const windowSize = 7; // 表示するページ番号数
-    let start = Math.max(1, currentPage - Math.floor(windowSize / 2));
-    let end = Math.min(totalPages, start + windowSize - 1);
-    start = Math.max(1, end - windowSize + 1);
-
-    if (start > 1) {
-      pager.appendChild(makeBtn('1', 1, false, currentPage === 1));
-      if (start > 2) {
-        const span = document.createElement('span');
-        span.textContent = '…';
-        span.style.padding = '0 6px';
-        pager.appendChild(span);
-      }
-    }
-
-    for (let p = start; p <= end; p++) {
-      pager.appendChild(makeBtn(String(p), p, false, p === currentPage));
-    }
-
-    if (end < totalPages) {
-      if (end < totalPages - 1) {
-        const span = document.createElement('span');
-        span.textContent = '…';
-        span.style.padding = '0 6px';
-        pager.appendChild(span);
-      }
-      pager.appendChild(makeBtn(String(totalPages), totalPages, false, currentPage === totalPages));
-    }
-
-    // Next
-    pager.appendChild(makeBtn('Next ›', currentPage + 1, currentPage === totalPages));
-  }
-
-  function applyPagination() {
-    const startIdx = (currentPage - 1) * PER_PAGE;
-    const endIdx = startIdx + PER_PAGE;
-
-    allCards.forEach((card, idx) => {
-      card.hidden = !(idx >= startIdx && idx < endIdx);
-    });
-
-    setPageToURL(currentPage);
-    renderPager();
-    rebuildPageItems();
-    updateModalNavButtons();
-  }
-
-  function goToPage(page) {
-    currentPage = clamp(page, 1, totalPages);
-    // モーダル開いてたら閉じる（ページ跨ぎでインデックスがズレるため）
-    if (isOpen()) closeModal();
-    applyPagination();
-    // ページトップに戻したい場合はコメント解除
-    // window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // ===== Modal =====
-  function isOpen() {
-    return modal && modal.classList.contains('is-open');
-  }
-
-  function updateModalNavButtons() {
+  function updateModalNavButtons(items) {
     if (!navPrev || !navNext) return;
-    const hasMany = pageItems.length > 1;
+    const hasMany = items.length > 1;
     navPrev.disabled = !hasMany;
     navNext.disabled = !hasMany;
     navPrev.classList.toggle('is-disabled', !hasMany);
@@ -151,10 +69,12 @@
 
   function openByIndex(index) {
     if (!modal || !modalImg || !modalCaption) return;
-    if (!pageItems.length) return;
 
-    currentIndex = (index + pageItems.length) % pageItems.length;
-    const item = pageItems[currentIndex];
+    const items = getVisibleItems();
+    if (!items.length) return;
+
+    currentIndex = (index + items.length) % items.length;
+    const item = items[currentIndex];
 
     modalImg.src = item.href;
     modalImg.alt = item.caption || '';
@@ -164,7 +84,7 @@
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
-    updateModalNavButtons();
+    updateModalNavButtons(items);
   }
 
   function closeModal() {
@@ -182,39 +102,41 @@
   }
 
   function next() {
-    if (pageItems.length <= 1) return;
+    const items = getVisibleItems();
+    if (items.length <= 1) return;
     openByIndex(currentIndex + 1);
   }
 
   function prev() {
-    if (pageItems.length <= 1) return;
+    const items = getVisibleItems();
+    if (items.length <= 1) return;
     openByIndex(currentIndex - 1);
   }
 
-  // ===== Click to open modal (表示中のみ) =====
+  // ===== Click to open modal (表示済みのみ) =====
   document.addEventListener('click', (e) => {
     const card = e.target.closest('a.card');
     if (!card) return;
-    if (card.hidden) return; // 非表示カードは反応しない
+    if (card.hidden) return;
 
     e.preventDefault();
 
-    // 現在ページのリストからインデックスを引く
+    const visibleCards = getVisibleCards();
     const href = card.getAttribute('href');
-    const idx = pageItems.findIndex(x => x.href === href);
+    const idx = visibleCards.findIndex(x => x.getAttribute('href') === href);
     openByIndex(idx >= 0 ? idx : 0);
   });
 
-  // Close controls
+  // ===== Close controls =====
   if (modalClose) modalClose.addEventListener('click', (e) => { e.stopPropagation(); closeModal(); });
   if (modal) modal.addEventListener('click', () => closeModal());
   if (modalFrame) modalFrame.addEventListener('click', (e) => e.stopPropagation());
 
-  // Nav buttons
+  // ===== Nav buttons =====
   if (navPrev) navPrev.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
   if (navNext) navNext.addEventListener('click', (e) => { e.stopPropagation(); next(); });
 
-  // Keyboard
+  // ===== Keyboard =====
   window.addEventListener('keydown', (e) => {
     if (!isOpen()) return;
     if (e.key === 'Escape') closeModal();
@@ -222,7 +144,7 @@
     if (e.key === 'ArrowRight') next();
   });
 
-  // Swipe
+  // ===== Swipe (Mobile) =====
   let touchStartX = 0, touchStartY = 0, touchActive = false;
   function isMostlyHorizontalSwipe(dx, dy) {
     return Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2;
@@ -251,6 +173,32 @@
     }, { passive: true });
   }
 
+  // ===== Infinite trigger =====
+  function setupInfinite() {
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', () => showNextBatch());
+    }
+
+    // IntersectionObserver が使えるなら自動読み込み
+    if (trigger && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          if (shown >= total) return;
+          showNextBatch();
+        });
+      }, {
+        root: null,
+        rootMargin: '600px 0px', // 早めに読み込む（体感が滑らか）
+        threshold: 0
+      });
+
+      io.observe(trigger);
+    }
+  }
+
   // ===== Init =====
-  applyPagination();
+  hideAllCards();
+  showNextBatch(); // 初回表示
+  setupInfinite();
 })();
