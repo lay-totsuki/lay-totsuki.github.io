@@ -70,6 +70,7 @@ h1{
   border-radius: var(--radius);
   overflow: hidden;
   background: #eaeaea;
+  text-decoration: none;
 }
 
 .card img{
@@ -77,6 +78,17 @@ h1{
   aspect-ratio: 1 / 1;
   object-fit: cover;
   display: block;
+}
+
+/* サムネ下のキャプション */
+.cardCaption{
+  padding: 10px 10px 11px;
+  font-size: 12px;
+  background: rgba(255,255,255,0.9);
+  border-top: 1px solid rgba(0,0,0,0.06);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ===== Modal ===== */
@@ -105,7 +117,6 @@ h1{
   width: 100%;
   max-width: 980px;
 
-  /* スマホでボタン分の余白を確保しやすいように */
   background: #111;
   border-radius: 16px;
   overflow: hidden;
@@ -113,17 +124,26 @@ h1{
   position: relative;
 }
 
+/* 画像 */
 .modalImg{
   width: 100%;
   height: auto;
 
-  /* 画面に収める */
   max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   object-fit: contain;
   display: block;
   background: #111;
 }
 
+/* モーダル内キャプション */
+.modalCaption{
+  padding: 10px 12px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.9);
+  background: rgba(0,0,0,0.55);
+}
+
+/* 閉じるボタン */
 .modalClose{
   position: fixed;
   top: calc(12px + env(safe-area-inset-top));
@@ -171,14 +191,20 @@ h1{
 
 /* ===== Mobile: move buttons to bottom (no overlap) ===== */
 @media (max-width: 520px){
-  /* 下部に操作エリアを作る（画像と被らない） */
+  /* 下部に操作エリアを作る（被り回避） */
   .modalFrame{
-    padding-bottom: 56px; /* ← ここが“被り回避”のキモ */
+    padding-bottom: 56px;
     max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   }
 
+  /* 画像の最大高さからボタン分を引く + キャプション分も引く */
   .modalImg{
-    max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 56px);
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 56px - 44px);
+  }
+
+  /* キャプションは画像の下にあるので読みやすく */
+  .modalCaption{
+    font-size: 12px;
   }
 
   .navBtn{
@@ -191,7 +217,6 @@ h1{
     font-size: 30px;
     line-height: 44px;
 
-    /* 目立ちすぎないよう少し透過 */
     background: rgba(255,255,255,0.88);
   }
 

@@ -23,12 +23,15 @@
     <!-- Original -->
     <section id="panel-original" class="panel">
       <div class="grid">
-        <a class="card" href="images/illust/original/full/2026-01-maidgirl.jpg">
-          <img src="images/illust/original/thumb/2026-01-maidgirl.jpg" alt="">
+        <!-- 使い方：data-caption に表示したい文言を入れる -->
+        <a class="card" href="images/illust/original/full/2026-01-maidgile.jpg" data-caption="2026-01 / メイドさん">
+          <img src="images/illust/original/thumb/2026-01-maidgirl.jpg" alt="2026-01 / Catgirl">
+          <div class="cardCaption">2026-01 / メイドさん</div>
         </a>
 
-        <a class="card" href="images/illust/original/full/2026-01-night-city.jpg">
-          <img src="images/illust/original/thumb/2026-01-night-city.jpg" alt="">
+        <a class="card" href="images/illust/original/full/2026-01-night-city.jpg" data-caption="2026-01 / Night City">
+          <img src="images/illust/original/thumb/2026-01-night-city.jpg" alt="2026-01 / Night City">
+          <div class="cardCaption">2026-01 / Night City</div>
         </a>
       </div>
     </section>
@@ -36,12 +39,14 @@
     <!-- Fanart -->
     <section id="panel-fanart" class="panel" hidden>
       <div class="grid">
-        <a class="card" href="images/illust/fanart/full/2026-02-holo-marine.jpg">
-          <img src="images/illust/fanart/thumb/2026-02-holo-marine.jpg" alt="">
+        <a class="card" href="images/illust/fanart/full/2026-02-holo-marine.jpg" data-caption="2026-02 / FA: Marine">
+          <img src="images/illust/fanart/thumb/2026-02-holo-marine.jpg" alt="2026-02 / FA: Marine">
+          <div class="cardCaption">2026-02 / FA: Marine</div>
         </a>
 
-        <a class="card" href="images/illust/fanart/full/2026-02-niji-mito.jpg">
-          <img src="images/illust/fanart/thumb/2026-02-niji-mito.jpg" alt="">
+        <a class="card" href="images/illust/fanart/full/2026-02-niji-mito.jpg" data-caption="2026-02 / FA: Mito">
+          <img src="images/illust/fanart/thumb/2026-02-niji-mito.jpg" alt="2026-02 / FA: Mito">
+          <div class="cardCaption">2026-02 / FA: Mito</div>
         </a>
       </div>
     </section>
@@ -53,6 +58,9 @@
 
     <div class="modalFrame" id="modalFrame" role="dialog" aria-modal="true" aria-label="Image preview">
       <img class="modalImg" id="modalImg" alt="">
+
+      <!-- キャプション（モーダル内） -->
+      <div class="modalCaption" id="modalCaption"></div>
 
       <button class="navBtn navPrev" id="navPrev" type="button" aria-label="Previous">‹</button>
       <button class="navBtn navNext" id="navNext" type="button" aria-label="Next">›</button>
@@ -84,10 +92,12 @@
     const modal = document.getElementById('modal');
     const modalFrame = document.getElementById('modalFrame');
     const modalImg = document.getElementById('modalImg');
+    const modalCaption = document.getElementById('modalCaption');
     const modalClose = document.getElementById('modalClose');
     const navPrev = document.getElementById('navPrev');
     const navNext = document.getElementById('navNext');
 
+    // 現在開いているパネル内の {href, caption} リスト
     let currentList = [];
     let currentIndex = -1;
 
@@ -97,8 +107,10 @@
 
     function buildCurrentList(){
       const panel = getActivePanel();
-      currentList = Array.from(panel.querySelectorAll('a.card'))
-        .map(a => a.getAttribute('href'));
+      currentList = Array.from(panel.querySelectorAll('a.card')).map(a => ({
+        href: a.getAttribute('href'),
+        caption: a.getAttribute('data-caption') || ''
+      }));
     }
 
     function updateNavButtons(){
@@ -111,8 +123,13 @@
 
     function openModalByIndex(index){
       if(!currentList.length) return;
+
       currentIndex = (index + currentList.length) % currentList.length;
-      modalImg.src = currentList[currentIndex];
+
+      const item = currentList[currentIndex];
+      modalImg.src = item.href;
+      modalImg.alt = item.caption || '';
+      modalCaption.textContent = item.caption || '';
 
       modal.classList.add('is-open');
       modal.setAttribute('aria-hidden', 'false');
@@ -125,6 +142,8 @@
       modal.classList.remove('is-open');
       modal.setAttribute('aria-hidden', 'true');
       modalImg.src = '';
+      modalImg.alt = '';
+      modalCaption.textContent = '';
       document.body.style.overflow = '';
       currentIndex = -1;
     }
@@ -139,7 +158,7 @@
       openModalByIndex(currentIndex - 1);
     }
 
-    // サムネクリックで開く
+    // サムネクリックで開く（イベント委譲）
     document.addEventListener('click', (e) => {
       const card = e.target.closest('a.card');
       if(!card) return;
@@ -147,7 +166,7 @@
 
       buildCurrentList();
       const href = card.getAttribute('href');
-      const idx = currentList.indexOf(href);
+      const idx = currentList.findIndex(x => x.href === href);
       openModalByIndex(idx >= 0 ? idx : 0);
     });
 
