@@ -3,19 +3,27 @@
   --radius: 14px;
   --max: 1080px;
 
-  /* Theme */
-  --bg-top: #f7f9fb;
-  --bg-mid: #eef2f6;
-  --card: #ffffff;
-  --card-soft: #fafafa;
+  /* Moonlight theme (soft night) */
+  --bg-night-1: #0f1623;   /* deep navy */
+  --bg-night-2: #121b2b;   /* navy */
+  --bg-night-3: #0b1020;   /* deeper */
+  --moon-glow-1: rgba(210, 225, 255, 0.20);
+  --moon-glow-2: rgba(170, 200, 255, 0.12);
+  --moon-glow-3: rgba(255, 255, 255, 0.06);
 
-  --text: #111;
-  --sub: rgba(0,0,0,0.66);
+  /* Cards & text */
+  --card: rgba(255,255,255,0.08);
+  --card-soft: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.10);
 
-  --shadow-lg: 0 12px 30px rgba(0,0,0,0.06);
-  --shadow-md: 0 8px 22px rgba(0,0,0,0.05);
+  --text: rgba(255,255,255,0.92);
+  --sub: rgba(255,255,255,0.70);
 
-  --accent: #111;
+  --shadow-lg: 0 18px 40px rgba(0,0,0,0.45);
+  --shadow-md: 0 10px 26px rgba(0,0,0,0.35);
+
+  --accent: rgba(255,255,255,0.92);
+  --accentText: #0c1220;
 }
 
 *{ box-sizing: border-box; }
@@ -26,11 +34,12 @@ body{
   line-height: 1.6;
   color: var(--text);
 
-  /* ===== Modern calm background ===== */
+  /* ===== Moonlight Background ===== */
   background:
-    radial-gradient(1200px 600px at 10% -10%, #ffffff 0%, transparent 40%),
-    radial-gradient(900px 450px at 90% 10%, #eef2f6 0%, transparent 45%),
-    linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 100%);
+    radial-gradient(700px 520px at 82% 12%, var(--moon-glow-1) 0%, transparent 55%),
+    radial-gradient(900px 650px at 18% 28%, var(--moon-glow-2) 0%, transparent 60%),
+    radial-gradient(1200px 900px at 50% -20%, var(--moon-glow-3) 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg-night-1) 0%, var(--bg-night-2) 45%, var(--bg-night-3) 100%);
 }
 
 a{ color: inherit; }
@@ -38,7 +47,7 @@ a{ color: inherit; }
 .container{
   max-width: var(--max);
   margin: 0 auto;
-  padding: 22px 16px 40px;
+  padding: 22px 16px 44px;
 }
 
 /* =========================
@@ -54,6 +63,8 @@ a{ color: inherit; }
 /* Profile */
 .profileCard{
   background: var(--card);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
   border-radius: 18px;
   padding: 22px 20px 20px;
   box-shadow: var(--shadow-lg);
@@ -61,17 +72,19 @@ a{ color: inherit; }
 }
 
 .profileIcon{
-  width: 56px;   /* PCでも小さめ */
+  width: 56px;
   height: 56px;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.18);
 }
 
 .name{
   margin: 4px 0 6px;
   font-size: 22px;
+  letter-spacing: 0.4px;
 }
 
 .intro{
@@ -83,17 +96,21 @@ a{ color: inherit; }
 .bio{
   font-size: 13px;
   margin: 0 0 12px;
+  color: var(--text);
 }
 
 .tags{
   font-size: 12px;
   line-height: 1.7;
+  color: var(--sub);
 }
 
 /* Creator */
 .creditCard{
   margin-top: 16px;
   background: var(--card);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
   border-radius: 16px;
   padding: 16px 18px;
   box-shadow: var(--shadow-md);
@@ -102,6 +119,7 @@ a{ color: inherit; }
 .creditCard h2{
   margin: 0 0 6px;
   font-size: 15px;
+  color: var(--text);
 }
 
 .creditCard p{
@@ -112,7 +130,7 @@ a{ color: inherit; }
 
 .creditCard a{
   text-decoration: none;
-  border-bottom: 1px solid rgba(0,0,0,0.15);
+  border-bottom: 1px solid rgba(255,255,255,0.20);
 }
 
 /* Gallery button */
@@ -126,15 +144,21 @@ a{ color: inherit; }
   padding: 12px 22px;
   border-radius: 999px;
   background: var(--accent);
-  color: #fff;
+  color: var(--accentText);
   font-size: 13px;
   text-decoration: none;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+}
+
+.galleryButton:hover{
+  filter: brightness(0.98);
 }
 
 /* Links block */
 .links{
   background: var(--card);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
   border-radius: 18px;
   padding: 20px 20px 10px;
   box-shadow: var(--shadow-lg);
@@ -143,6 +167,7 @@ a{ color: inherit; }
 .links h2{
   margin: 0 0 10px;
   font-size: 17px;
+  color: var(--text);
 }
 
 .linkCard{
@@ -150,19 +175,22 @@ a{ color: inherit; }
   padding: 14px 16px;
   border-radius: 14px;
   background: var(--card-soft);
+  border: 1px solid rgba(255,255,255,0.08);
   text-decoration: none;
   margin-bottom: 10px;
-  transition: transform .18s ease, background .18s ease;
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
 }
 
 .linkCard:hover{
-  background: #f0f3f7;
   transform: translateY(-1px);
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.14);
 }
 
 .linkTitle{
   font-weight: 600;
   margin-bottom: 4px;
+  color: var(--text);
 }
 
 .linkDesc{
@@ -189,11 +217,13 @@ header h1{
 /* Tabs */
 .tabs{
   display: inline-flex;
-  background: rgba(0,0,0,0.06);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.10);
   padding: 6px;
   border-radius: 999px;
   gap: 6px;
   margin-bottom: 16px;
+  backdrop-filter: blur(8px);
 }
 
 .tab{
@@ -203,11 +233,13 @@ header h1{
   border-radius: 999px;
   cursor: pointer;
   font-size: 14px;
+  color: var(--sub);
 }
 
 .tab.is-active{
-  background: #fff;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.10);
+  background: rgba(255,255,255,0.92);
+  color: var(--accentText);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.35);
 }
 
 /* Grid */
@@ -221,8 +253,10 @@ header h1{
   display: block;
   border-radius: var(--radius);
   overflow: hidden;
-  background: #eaeaea;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
   text-decoration: none;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.25);
 }
 
 .card img{
@@ -236,8 +270,9 @@ header h1{
 .cardCaption{
   padding: 10px 10px 11px;
   font-size: 12px;
-  background: rgba(255,255,255,0.92);
-  border-top: 1px solid rgba(0,0,0,0.06);
+  color: rgba(255,255,255,0.86);
+  background: rgba(0,0,0,0.30);
+  border-top: 1px solid rgba(255,255,255,0.10);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -250,11 +285,10 @@ header h1{
 .modal{
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.85);
+  background: rgba(5,8,16,0.86);
   z-index: 9999;
   display: none;
 
-  /* safe area */
   padding-top: calc(12px + env(safe-area-inset-top));
   padding-right: calc(12px + env(safe-area-inset-right));
   padding-bottom: calc(12px + env(safe-area-inset-bottom));
@@ -270,10 +304,12 @@ header h1{
 .modalFrame{
   width: 100%;
   max-width: 980px;
-  background: #111;
+  background: rgba(10,14,24,0.85);
+  border: 1px solid rgba(255,255,255,0.10);
+  backdrop-filter: blur(8px);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.60);
   position: relative;
 }
 
@@ -283,15 +319,16 @@ header h1{
   max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   object-fit: contain;
   display: block;
-  background: #111;
+  background: rgba(0,0,0,0.20);
 }
 
 /* Modal caption */
 .modalCaption{
   padding: 10px 12px;
   font-size: 13px;
-  color: rgba(255,255,255,0.90);
-  background: rgba(0,0,0,0.55);
+  color: rgba(255,255,255,0.88);
+  background: rgba(0,0,0,0.35);
+  border-top: 1px solid rgba(255,255,255,0.10);
 }
 
 /* Close button */
@@ -303,13 +340,15 @@ header h1{
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: none;
+  border: 1px solid rgba(255,255,255,0.16);
 
   font-size: 30px;
   font-weight: 700;
 
   cursor: pointer;
-  background: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.90);
+  color: var(--accentText);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.55);
 }
 
 /* Prev/Next buttons (default: middle sides) */
@@ -321,14 +360,16 @@ header h1{
   width: 44px;
   height: 44px;
   border-radius: 999px;
-  border: none;
+  border: 1px solid rgba(255,255,255,0.12);
 
   font-size: 34px;
   line-height: 44px;
 
   cursor: pointer;
-  background: rgba(255,255,255,0.92);
+  background: rgba(255,255,255,0.88);
+  color: var(--accentText);
   z-index: 2;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.50);
 }
 
 .navPrev{ left: 10px; }
@@ -349,13 +390,9 @@ header h1{
     grid-template-columns: 1fr;
   }
 
-  .profileCard{
-    text-align: center;
-  }
-
   .profileIcon{
-    width: 56px;
-    height: 56px;
+    width: 54px;
+    height: 54px;
   }
 
   .name{
@@ -370,12 +407,12 @@ header h1{
 /* Mobile: move modal nav buttons to bottom (no overlap) */
 @media (max-width: 520px){
   .profileIcon{
-    width: 52px;
-    height: 52px;
+    width: 50px;
+    height: 50px;
   }
 
   .modalFrame{
-    padding-bottom: 56px; /* button area */
+    padding-bottom: 56px;
     max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   }
 
@@ -397,8 +434,7 @@ header h1{
     height: 44px;
     font-size: 30px;
     line-height: 44px;
-
-    background: rgba(255,255,255,0.88);
+    background: rgba(255,255,255,0.86);
   }
 
   .navPrev{ left: 12px; }
