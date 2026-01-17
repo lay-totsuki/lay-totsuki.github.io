@@ -564,3 +564,51 @@ header h1{
   cursor: not-allowed;
 }
 
+/* =========================
+   Gallery Active Highlight
+========================= */
+
+/* 一瞬光る用クラス（JSで focus される要素に効く） */
+a.card:focus {
+  outline: none;
+}
+
+/* 疑似ハイライト */
+a.card:focus-visible,
+a.card.highlighted {
+  position: relative;
+}
+
+/* 光る枠 */
+a.card:focus-visible::after,
+a.card.highlighted::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.2),
+    0 0 16px rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  animation: highlightFade 1.2s ease-out forwards;
+}
+
+/* フェードアウト */
+@keyframes highlightFade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* モバイル用微調整 */
+@media (max-width: 600px) {
+  a.card:focus-visible::after,
+  a.card.highlighted::after {
+    inset: -3px;
+    border-radius: 12px;
+  }
+}

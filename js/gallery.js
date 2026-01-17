@@ -1,8 +1,15 @@
-// gallery.js (infinite scroll-like + modal)
-// 対象: gallery-original.html / gallery-fanart.html / gallery-mini.html
+// gallery.js (infinite scroll-like + modal nav across ALL items + auto scroll)
+// - 一覧はBATCHずつ表示（無限スクロール風）
+// - モーダルの次/前は「全件」を対象に回す
+// - まだ表示されていない次の画像に進む時は、自動で必要分を表示
+// - モーダルで移動したら、一覧側を該当カード位置へ自動スクロール（気持ちいいやつ）
+
 (() => {
   // ===== Settings =====
-  const BATCH = 12; // 1回で追加表示する枚数
+  const BATCH = 12;              // 1回で追加表示する枚数
+  const SCROLL_BEHAVIOR = 'smooth';
+  const SCROLL_BLOCK = 'center'; // 'start' / 'center' / 'nearest'
+  const SCROLL_DELAY_MS = 40;    // DOM反映後にスクロールするための小さな待ち
 
   // ===== Elements =====
   const modal = document.getElementById('modal');
@@ -16,13 +23,13 @@
   const trigger = document.getElementById('infiniteTrigger');
   const loadMoreBtn = document.getElementById('loadMore');
 
-  // grid内カード全件（DOMには全部置いておく方式）
+  // grid内カード全件（DOMに全部置いておく方式）
   const allCards = Array.from(document.querySelectorAll('a.card'));
   const total = allCards.length;
 
   // ===== State =====
-  let shown = 0; // 現在表示している枚数
-  let currentIndex = -1;
+  let shown = 0;          // 現在表示している枚数
+  let currentIndex = -1;  // 「全件」基準のインデックス
 
   function isOpen() {
     return modal && modal.classList.contains('is-open');
@@ -32,59 +39,89 @@
     allCards.forEach(card => { card.hidden = true; });
   }
 
-  function showNextBatch() {
-    const next = Math.min(total, shown + BATCH);
+  function updateLoadMoreButton() {
+    if (!loadMoreBtn) return;
+    const done = shown >= total;
+    loadMoreBtn.style.display = done ? 'none' : 'inline-flex';
+    loadMoreBtn.disabled = done;
+  }
+
+  function showUntil(targetCount) {
+    const next = Math.min(total, targetCount);
     for (let i = shown; i < next; i++) {
       allCards[i].hidden = false;
     }
     shown = next;
-
-    // もう全部出たらボタン消す
-    if (loadMoreBtn) {
-      loadMoreBtn.style.display = (shown >= total) ? 'none' : 'inline-flex';
-      loadMoreBtn.disabled = shown >= total;
-    }
+    updateLoadMoreButton();
   }
 
-  function getVisibleCards() {
-    // 「表示済み」のカードだけを対象にモーダル移動させる
-    return allCards.slice(0, shown);
+  function showNextBatch() {
+    showUntil(shown + BATCH);
   }
 
-  function getVisibleItems() {
-    return getVisibleCards().map(a => ({
-      href: a.getAttribute('href'),
-      caption: a.getAttribute('data-caption') || ''
-    }));
-  }
-
-  function updateModalNavButtons(items) {
+  function updateModalNavButtons() {
     if (!navPrev || !navNext) return;
-    const hasMany = items.length > 1;
+    const hasMany = total > 1;
     navPrev.disabled = !hasMany;
     navNext.disabled = !hasMany;
     navPrev.classList.toggle('is-disabled', !hasMany);
     navNext.classList.toggle('is-disabled', !hasMany);
   }
 
-  function openByIndex(index) {
+  function ensureVisibleForIndex(index) {
+    const need = index + 1; // 0-basedなので+1枚必要
+    if (need > shown) showUntil(need);
+  }
+
+  function scrollToCard(index) {
+    const card = allCards[index];
+    if (!card) return;
+
+    // hidden解除直後はレイアウトが確定してないことがあるので少し待つ
+    window.setTimeout(() => {
+      try {
+        card.scrollIntoView({ behavior: SCROLL_BEHAVIOR, block: SCROLL_BLOCK, inline: 'nearest' });
+      } catch (_) {
+        // 古いブラウザ用フォールバック
+        card.scrollIntoView();
+      }
+
+      // どれが今のカードか分かりやすいようにフォーカスも当てる（アクセシブル）
+      // ただし a 要素に focus するため tabindex を一時付与
+      const hadTabIndex = card.hasAttribute('tabindex');
+      if (!hadTabIndex) card.setAttribute('tabindex', '-1');
+      card.focus({ preventScroll: true });
+      if (!hadTabIndex) card.removeAttribute('tabindex');
+    }, SCROLL_DELAY_MS);
+  }
+
+  function openByIndex(index, { autoScroll = false } = {}) {
     if (!modal || !modalImg || !modalCaption) return;
+    if (!total) return;
 
-    const items = getVisibleItems();
-    if (!items.length) return;
+    // wrap
+    currentIndex = ((index % total) + total) % total;
 
-    currentIndex = (index + items.length) % items.length;
-    const item = items[currentIndex];
+    // まだ一覧で見えてない分なら先に表示しておく
+    ensureVisibleForIndex(currentIndex);
 
-    modalImg.src = item.href;
-    modalImg.alt = item.caption || '';
-    modalCaption.textContent = item.caption || '';
+    const card = allCards[currentIndex];
+    const href = card.getAttribute('href');
+    const caption = card.getAttribute('data-caption') || '';
+
+    modalImg.src = href;
+    modalImg.alt = caption;
+    modalCaption.textContent = caption;
 
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
-    updateModalNavButtons(items);
+    updateModalNavButtons();
+
+    if (autoScroll) {
+      scrollToCard(currentIndex);
+    }
   }
 
   function closeModal() {
@@ -102,18 +139,16 @@
   }
 
   function next() {
-    const items = getVisibleItems();
-    if (items.length <= 1) return;
-    openByIndex(currentIndex + 1);
+    if (total <= 1) return;
+    openByIndex(currentIndex + 1, { autoScroll: true });
   }
 
   function prev() {
-    const items = getVisibleItems();
-    if (items.length <= 1) return;
-    openByIndex(currentIndex - 1);
+    if (total <= 1) return;
+    openByIndex(currentIndex - 1, { autoScroll: true });
   }
 
-  // ===== Click to open modal (表示済みのみ) =====
+  // ===== Click to open modal (表示済みのカードだけクリック可) =====
   document.addEventListener('click', (e) => {
     const card = e.target.closest('a.card');
     if (!card) return;
@@ -121,10 +156,11 @@
 
     e.preventDefault();
 
-    const visibleCards = getVisibleCards();
     const href = card.getAttribute('href');
-    const idx = visibleCards.findIndex(x => x.getAttribute('href') === href);
-    openByIndex(idx >= 0 ? idx : 0);
+    const idx = allCards.findIndex(x => x.getAttribute('href') === href);
+
+    // クリックで開いた場合は「既にその場所にいる」ので autoScroll しない
+    openByIndex(idx >= 0 ? idx : 0, { autoScroll: false });
   });
 
   // ===== Close controls =====
@@ -175,21 +211,18 @@
 
   // ===== Infinite trigger =====
   function setupInfinite() {
-    if (loadMoreBtn) {
-      loadMoreBtn.addEventListener('click', () => showNextBatch());
-    }
+    if (loadMoreBtn) loadMoreBtn.addEventListener('click', () => showNextBatch());
 
-    // IntersectionObserver が使えるなら自動読み込み
     if (trigger && 'IntersectionObserver' in window) {
       const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting) return;
-          if (shown >= total) return;
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          if (shown >= total) continue;
           showNextBatch();
-        });
+        }
       }, {
         root: null,
-        rootMargin: '600px 0px', // 早めに読み込む（体感が滑らか）
+        rootMargin: '600px 0px',
         threshold: 0
       });
 
@@ -199,6 +232,7 @@
 
   // ===== Init =====
   hideAllCards();
-  showNextBatch(); // 初回表示
+  showNextBatch();      // 初回表示
   setupInfinite();
+  updateModalNavButtons();
 })();
