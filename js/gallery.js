@@ -256,15 +256,14 @@ document.addEventListener('dragstart', (e) => {
 });
 
 // =========================
-// iOS long-press save mitigation (modal only)
-// - prevents "easy save" on long press
-// - keeps normal tap working
+// iOS long-press save mitigation (thumbs + modal)
+// - blocks "easy save" on long press
+// - keeps normal tap and scroll usable (best-effort)
 // =========================
 
 (() => {
   let lpTimer = null;
   let lpTriggered = false;
-
   const LONG_PRESS_MS = 420;
 
   const clearLP = () => {
@@ -273,16 +272,17 @@ document.addEventListener('dragstart', (e) => {
     lpTriggered = false;
   };
 
-  document.addEventListener('touchstart', (e) => {
-    const modal = document.getElementById('modal');
-    if (!modal || !modal.classList.contains('is-open')) return;
+  const isTargetImage = (target) => {
+    // サムネ（一覧）とモーダル画像を対象にする
+    return !!target.closest('#modalImg, .card img');
+  };
 
-    const img = e.target.closest('#modalImg');
-    if (!img) return;
+  document.addEventListener('touchstart', (e) => {
+    if (!isTargetImage(e.target)) return;
 
     lpTriggered = false;
 
-    // 長押しっぽくなったら preventDefault して保存メニューを出にくくする
+    // 指が止まって一定時間経ったら「長押し」とみなして抑止
     lpTimer = setTimeout(() => {
       lpTriggered = true;
       try { e.preventDefault(); } catch (_) {}
@@ -290,14 +290,17 @@ document.addEventListener('dragstart', (e) => {
   }, { passive: false });
 
   document.addEventListener('touchmove', () => {
-    clearLP(); // 指が動いたら長押し判定しない
+    // スクロールが始まったら長押し判定を解除（UX維持）
+    clearLP();
   }, { passive: true });
 
   document.addEventListener('touchend', (e) => {
-    const modal = document.getElementById('modal');
-    if (!modal || !modal.classList.contains('is-open')) return;
+    if (!isTargetImage(e.target)) {
+      clearLP();
+      return;
+    }
 
-    // 長押しが発火してたら、その後の挙動も止める（保存のきっかけ潰し）
+    // 長押し判定が成立してたら、その後の挙動も止めて保存の“きっかけ”を潰す
     if (lpTriggered) {
       try { e.preventDefault(); } catch (_) {}
     }
