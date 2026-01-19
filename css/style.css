@@ -662,8 +662,9 @@ a.card:focus-visible::after{
 }
 
 /* iOS long-press save mitigation (modal image) */
-#modalImg{
-  -webkit-touch-callout: none; /* 長押しメニュー */
+#modalImg,
+.card img{
+  -webkit-touch-callout: none; /* iOS: 長押しメニュー */
   -webkit-user-select: none;
   user-select: none;
 }
