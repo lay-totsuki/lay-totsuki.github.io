@@ -254,3 +254,58 @@ document.addEventListener('dragstart', (e) => {
     e.preventDefault();
   }
 });
+
+// =========================
+// iOS long-press save mitigation (modal only)
+// - prevents "easy save" on long press
+// - keeps normal tap working
+// =========================
+
+(() => {
+  let lpTimer = null;
+  let lpTriggered = false;
+
+  const LONG_PRESS_MS = 420;
+
+  const clearLP = () => {
+    if (lpTimer) clearTimeout(lpTimer);
+    lpTimer = null;
+    lpTriggered = false;
+  };
+
+  document.addEventListener('touchstart', (e) => {
+    const modal = document.getElementById('modal');
+    if (!modal || !modal.classList.contains('is-open')) return;
+
+    const img = e.target.closest('#modalImg');
+    if (!img) return;
+
+    lpTriggered = false;
+
+    // 長押しっぽくなったら preventDefault して保存メニューを出にくくする
+    lpTimer = setTimeout(() => {
+      lpTriggered = true;
+      try { e.preventDefault(); } catch (_) {}
+    }, LONG_PRESS_MS);
+  }, { passive: false });
+
+  document.addEventListener('touchmove', () => {
+    clearLP(); // 指が動いたら長押し判定しない
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    const modal = document.getElementById('modal');
+    if (!modal || !modal.classList.contains('is-open')) return;
+
+    // 長押しが発火してたら、その後の挙動も止める（保存のきっかけ潰し）
+    if (lpTriggered) {
+      try { e.preventDefault(); } catch (_) {}
+    }
+
+    clearLP();
+  }, { passive: false });
+
+  document.addEventListener('touchcancel', () => {
+    clearLP();
+  }, { passive: true });
+})();
