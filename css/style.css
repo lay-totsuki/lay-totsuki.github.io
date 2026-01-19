@@ -660,3 +660,10 @@ a.card:focus-visible::after{
   .navPrev{ left: 12px; }
   .navNext{ right: 12px; }
 }
+
+/* iOS long-press save mitigation (modal image) */
+#modalImg{
+  -webkit-touch-callout: none; /* 長押しメニュー */
+  -webkit-user-select: none;
+  user-select: none;
+}
